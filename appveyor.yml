@@ -17,6 +17,13 @@ init:
       $env:nuget_version = "$env:appveyor_build_version-dev"
     }
 
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: $(nuget_version)
+
 nuget:
   project_feed: true
 
@@ -39,9 +46,9 @@ artifacts:
 - path: '**\*.nupkg'
   name: Nuget Packages
 
-deploy:
-- provider: NuGet
-  api_key:
-    secure: 80+P1cLUqTM+reRhqLzF2Lam3T807nNcrdPtYnBFG85FpgCQDUY5VQkYzRinctbj
-  on:
-    branch: /^master$/
+# deploy:
+# - provider: NuGet
+#   api_key:
+#     secure: 80+P1cLUqTM+reRhqLzF2Lam3T807nNcrdPtYnBFG85FpgCQDUY5VQkYzRinctbj
+#   on:
+#     branch: /^master$/
