@@ -41,16 +41,13 @@ test:
     only:
     - '**\*.Tests.dll'
 
-# before_package:
-# - ps: dotnet pack $env:appveyor_build_folder/Bearded.UI/Bearded.UI.csproj --configuration Release /p:Version="$env:nuget_version"
-
 artifacts:
 - path: '**\*.nupkg'
   name: Nuget Packages
 
-# deploy:
-# - provider: NuGet
-#   api_key:
-#     secure: 80+P1cLUqTM+reRhqLzF2Lam3T807nNcrdPtYnBFG85FpgCQDUY5VQkYzRinctbj
-#   on:
-#     branch: /^master$/
+deploy:
+- provider: NuGet
+  api_key:
+    secure: 80+P1cLUqTM+reRhqLzF2Lam3T807nNcrdPtYnBFG85FpgCQDUY5VQkYzRinctbj
+  on:
+    branch: /^master$/
