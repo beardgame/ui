@@ -17,12 +17,14 @@ init:
       $env:nuget_version = "$env:appveyor_build_version-dev"
     }
 
-assembly_info:
+dotnet_csproj:
   patch: true
-  file: '**\AssemblyInfo.*'
+  file: '**\*.csproj'
+  version: '{version}'
+  package_version: $(nuget_version)
   assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: $(nuget_version)
+  file_version: '{version}'
+  informational_version: $(nuget_version)
 
 nuget:
   project_feed: true
@@ -39,8 +41,8 @@ test:
     only:
     - '**\*.Tests.dll'
 
-before_package:
-- ps: dotnet pack $env:appveyor_build_folder/Bearded.UI/Bearded.UI.csproj --configuration Release /p:Version="$env:nuget_version"
+# before_package:
+# - ps: dotnet pack $env:appveyor_build_folder/Bearded.UI/Bearded.UI.csproj --configuration Release /p:Version="$env:nuget_version"
 
 artifacts:
 - path: '**\*.nupkg'
