@@ -143,11 +143,17 @@ namespace Bearded.UI.Controls
   
         protected abstract void RenderStronglyTyped(IRendererRouter r);
 
+        public event GenericEventHandler<MouseEventArgs> MouseEnter;
         public event GenericEventHandler<MouseEventArgs> MouseMove;
         public event GenericEventHandler<MouseEventArgs> MouseExit;
         public event GenericEventHandler<MouseButtonEventArgs> MouseButtonDown;
         public event GenericEventHandler<MouseButtonEventArgs> MouseButtonRelease;
 
+        public virtual void PreviewMouseEntered(MouseEventArgs eventArgs) { }
+        public virtual void MouseEntered(MouseEventArgs eventArgs)
+        {
+            MouseEnter?.Invoke(eventArgs);
+        }
         public virtual void PreviewMouseMoved(MouseEventArgs eventArgs) { }
         public virtual void MouseMoved(MouseEventArgs eventArgs)
         {

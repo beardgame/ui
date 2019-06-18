@@ -33,22 +33,29 @@ namespace Bearded.UI.Events
             var path = EventRouter.FindPropagationPath(
                 root, control => control.IsVisible &&  control.Frame.ContainsPoint(mousePosition));
 
+            var (removedFromPath, addedToPath) = previousPropagationPath != null
+                ? EventPropagationPath.CalculateDeviation(previousPropagationPath, path)
+                : (EventPropagationPath.Empty, path);
+            var eventArgs = new MouseEventArgs(mousePosition);
+
+            // Mouse exit
+            removedFromPath.PropagateEvent(
+                eventArgs,
+                (c, e) => c.PreviewMouseExited(e),
+                (c, e) => c.MouseExited(e));
+
+            // Mouse enter
+            addedToPath.PropagateEvent(
+                eventArgs,
+                (c, e) => c.PreviewMouseExited(e),
+                (c, e) => c.MouseExited(e));
+
             // Mouse move
             path.PropagateEvent(
-                new MouseEventArgs(mousePosition),
+                eventArgs,
                 (c, e) => c.PreviewMouseMoved(e),
                 (c, e) => c.MouseMoved(e));
 
-            // Mouse exit
-            if (previousPropagationPath != null)
-            {
-                var (removedFromPath, _) = EventPropagationPath.CalculateDeviation(previousPropagationPath, path);
-                removedFromPath.PropagateEvent(
-                    new MouseEventArgs(mousePosition),
-                    (c, e) => c.PreviewMouseExited(e),
-                    (c, e) => c.MouseExited(e));
-            }
-            
             // Mouse clicks
             foreach (var btn in mouseButtons)
             {
