@@ -47,8 +47,8 @@ namespace Bearded.UI.Events
             // Mouse enter
             addedToPath.PropagateEvent(
                 eventArgs,
-                (c, e) => c.PreviewMouseExited(e),
-                (c, e) => c.MouseExited(e));
+                (c, e) => c.PreviewMouseEntered(e),
+                (c, e) => c.MouseEntered(e));
 
             // Mouse move
             path.PropagateEvent(
