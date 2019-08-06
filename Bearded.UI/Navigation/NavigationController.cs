@@ -30,6 +30,7 @@ namespace Bearded.UI.Navigation
 
         public void Exit()
         {
+            CloseAll();
             Exited?.Invoke();
         }
 
@@ -37,6 +38,14 @@ namespace Bearded.UI.Navigation
         {
             while (root.Children.Count > 0)
                 root.Remove(root.Children[0]);
+            viewsByModel.Clear();
+        }
+
+        public void Close(INavigationNode toClose)
+        {
+            var viewToReplace = viewsByModel[toClose];
+            root.Remove(viewToReplace);
+            viewsByModel.Remove(toClose);
         }
 
         public void ReplaceAll<TModel>()
@@ -67,6 +76,7 @@ namespace Bearded.UI.Navigation
             new AnchorTemplate(viewToReplace).ApplyTo(view);
             root.AddOnTopOf(viewToReplace, view);
             root.Remove(viewToReplace);
+            viewsByModel.Remove(toReplace);
         }
 
         public TModel Push<TModel>()
