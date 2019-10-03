@@ -31,7 +31,17 @@ namespace Bearded.UI.Events
             var mousePosition = root.TransformViewportPosToFramePos((Vector2d) inputManager.MousePosition);
 
             var path = EventRouter.FindPropagationPath(
-                root, control => control.IsVisible &&  control.Frame.ContainsPoint(mousePosition));
+                root, control =>
+                {
+                    if (!control.IsVisible || !control.Frame.ContainsPoint(mousePosition))
+                    {
+                        return EventRouter.PropagationTestOutcome.Failure;
+                    }
+
+                    return control.IsClickThrough
+                        ? EventRouter.PropagationTestOutcome.PassThrough
+                        : EventRouter.PropagationTestOutcome.Success;
+                });
 
             var (removedFromPath, addedToPath) = previousPropagationPath != null
                 ? EventPropagationPath.CalculateDeviation(previousPropagationPath, path)
