@@ -7,8 +7,9 @@ namespace Bearded.UI.EventArgs
         public int DeltaScroll { get; }
         public float DeltaScrollF { get; }
 
-        public MouseScrollEventArgs(Vector2d mousePosition, int deltaScroll, float deltaScrollF)
-            : base(mousePosition)
+        public MouseScrollEventArgs(
+            Vector2d mousePosition, ModifierKeys modifierKeys, int deltaScroll, float deltaScrollF)
+            : base(mousePosition, modifierKeys)
         {
             DeltaScroll = deltaScroll;
             DeltaScrollF = deltaScrollF;

@@ -29,6 +29,7 @@ namespace Bearded.UI.Events
         internal void Update()
         {
             var mousePosition = root.TransformViewportPosToFramePos((Vector2d) inputManager.MousePosition);
+            var modifierKeys = ModifierKeys.FromInputManager(inputManager);
 
             var path = EventRouter.FindPropagationPath(
                 root, control => control.IsVisible &&  control.Frame.ContainsPoint(mousePosition));
@@ -36,7 +37,7 @@ namespace Bearded.UI.Events
             var (removedFromPath, addedToPath) = previousPropagationPath != null
                 ? EventPropagationPath.CalculateDeviation(previousPropagationPath, path)
                 : (EventPropagationPath.Empty, path);
-            var eventArgs = new MouseEventArgs(mousePosition);
+            var eventArgs = new MouseEventArgs(mousePosition, modifierKeys);
 
             // Mouse exit
             removedFromPath.PropagateEvent(
@@ -63,14 +64,14 @@ namespace Bearded.UI.Events
                 if (action.Hit)
                 {
                     path.PropagateEvent(
-                        new MouseButtonEventArgs(mousePosition, btn),
+                        new MouseButtonEventArgs(mousePosition, modifierKeys, btn),
                         (c, e) => c.PreviewMouseButtonHit(e),
                         (c, e) => c.MouseButtonHit(e));
                 }
                 if (action.Released)
                 {
                     path.PropagateEvent(
-                        new MouseButtonEventArgs(mousePosition, btn),
+                        new MouseButtonEventArgs(mousePosition, modifierKeys, btn),
                         (c, e) => c.PreviewMouseButtonReleased(e),
                         (c, e) => c.MouseButtonReleased(e));
                 }
@@ -81,7 +82,8 @@ namespace Bearded.UI.Events
             if (inputManager.DeltaScrollF != 0)
             {
                 path.PropagateEvent(
-                    new MouseScrollEventArgs(mousePosition, inputManager.DeltaScroll, inputManager.DeltaScrollF),
+                    new MouseScrollEventArgs(
+                        mousePosition, modifierKeys, inputManager.DeltaScroll, inputManager.DeltaScrollF),
                     (c, e) => c.PreviewMouseScrolled(e),
                     (c, e) => c.MouseScrolled(e));
             }
