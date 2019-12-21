@@ -28,9 +28,11 @@ namespace Bearded.UI.Events
                 ? EventPropagationPath.Empty
                 : EventRouter.FindPropagationPath(root, focusedControl);
 
+            var modifierKeys = ModifierKeys.FromInputManager(inputManager);
+
             foreach (var (eventArgs, isPressed) in inputManager.KeyEvents)
             {
-                var args = new KeyEventArgs(eventArgs.Key);
+                var args = new KeyEventArgs(eventArgs.Key, modifierKeys);
 
                 if (isPressed)
                 {
