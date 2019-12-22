@@ -20,7 +20,7 @@ namespace Bearded.UI.Events
 
         public static EventPropagationPath FindPropagationPath(IControlParent root, PropagationTest propagationTest)
         {
-            return new EventPropagationPath(findPropagationPathEnumerable(root, propagationTest).ToList().AsReadOnly());
+            return new EventPropagationPath(findPropagationPathUsingTest(root, propagationTest).ToList().AsReadOnly());
         }
 
         public static EventPropagationPath FindPropagationPath(IControlParent root, Control leaf)
@@ -44,47 +44,52 @@ namespace Bearded.UI.Events
             return new EventPropagationPath(path.AsReadOnly());
         }
 
-        private static IEnumerable<Control> findPropagationPathEnumerable(
+        private static IEnumerable<Control> findPropagationPathUsingTest(
             IControlParent root, PropagationTest propagationTest)
         {
-            if (root == null) yield break;
+            var path = new List<Control>();
+            findPropagationPathUsingTest(root, propagationTest, path);
+            return path;
+        }
 
+        private static bool findPropagationPathUsingTest(
+            IControlParent root, PropagationTest propagationTest, List<Control> path)
+        {
             foreach (var child in root.Children.Reverse())
             {
                 var outcome = propagationTest(child);
                 switch (outcome)
                 {
                     case PropagationTestOutcome.Miss:
-                        continue;
+                        break;
                     case PropagationTestOutcome.PassThrough:
-                        if (!(child is IControlParent childAsParent) || childAsParent.Children.Count == 0)
+                        if (child is IControlParent childAsPassThroughParent
+                            && childAsPassThroughParent.Children.Count > 0)
                         {
-                            continue;
-                        }
-                        var potentialPath = findPropagationPathEnumerable(childAsParent, propagationTest).ToList();
-                        if (potentialPath.Count == 0
-                            || propagationTest(potentialPath.Last()) == PropagationTestOutcome.PassThrough)
-                        {
-                            continue;
-                        }
-                        yield return child;
-                        foreach (var descendant in potentialPath)
-                        {
-                            yield return descendant;
+                            path.Add(child);
+                            var hasPathWithHit =
+                                findPropagationPathUsingTest(childAsPassThroughParent, propagationTest, path);
+                            if (hasPathWithHit)
+                            {
+                                return true;
+                            }
+                            // backtrack
+                            path.RemoveAt(path.Count - 1);
                         }
                         break;
                     case PropagationTestOutcome.Hit:
-                        yield return child;
-                        foreach (
-                            var descendant in findPropagationPathEnumerable(child as IControlParent, propagationTest))
+                        path.Add(child);
+                        if (child is IControlParent childAsHitParent && childAsHitParent.Children.Count > 0)
                         {
-                            yield return descendant;
+                            findPropagationPathUsingTest(childAsHitParent, propagationTest, path);
                         }
-                        yield break;
+                        return true;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
+
+            return false;
         }
     }
 }
