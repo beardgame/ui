@@ -35,12 +35,12 @@ namespace Bearded.UI.Events
                 {
                     if (!control.IsVisible || !control.Frame.ContainsPoint(mousePosition))
                     {
-                        return EventRouter.PropagationTestOutcome.Failure;
+                        return EventRouter.PropagationTestOutcome.Miss;
                     }
 
                     return control.IsClickThrough
                         ? EventRouter.PropagationTestOutcome.PassThrough
-                        : EventRouter.PropagationTestOutcome.Success;
+                        : EventRouter.PropagationTestOutcome.Hit;
                 });
 
             var (removedFromPath, addedToPath) = previousPropagationPath != null

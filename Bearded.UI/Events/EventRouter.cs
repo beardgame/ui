@@ -10,9 +10,9 @@ namespace Bearded.UI.Events
     {
         public enum PropagationTestOutcome
         {
-            Failure,
+            Miss,
             PassThrough,
-            Success
+            Hit
         }
 
         public delegate void RoutedEvent<in T>(Control control, T eventData) where T : RoutedEventArgs;
@@ -54,7 +54,7 @@ namespace Bearded.UI.Events
                 var outcome = propagationTest(child);
                 switch (outcome)
                 {
-                    case PropagationTestOutcome.Failure:
+                    case PropagationTestOutcome.Miss:
                         continue;
                     case PropagationTestOutcome.PassThrough:
                         if (!(child is IControlParent childAsParent) || childAsParent.Children.Count == 0)
@@ -73,7 +73,7 @@ namespace Bearded.UI.Events
                             yield return descendant;
                         }
                         break;
-                    case PropagationTestOutcome.Success:
+                    case PropagationTestOutcome.Hit:
                         yield return child;
                         foreach (
                             var descendant in findPropagationPathEnumerable(child as IControlParent, propagationTest))
