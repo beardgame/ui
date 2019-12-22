@@ -32,7 +32,17 @@ namespace Bearded.UI.Events
             var modifierKeys = ModifierKeys.FromInputManager(inputManager);
 
             var path = EventRouter.FindPropagationPath(
-                root, control => control.IsVisible &&  control.Frame.ContainsPoint(mousePosition));
+                root, control =>
+                {
+                    if (!control.IsVisible || !control.Frame.ContainsPoint(mousePosition))
+                    {
+                        return EventRouter.PropagationTestOutcome.Miss;
+                    }
+
+                    return control.IsClickThrough
+                        ? EventRouter.PropagationTestOutcome.PassThrough
+                        : EventRouter.PropagationTestOutcome.Hit;
+                });
 
             var (removedFromPath, addedToPath) = previousPropagationPath != null
                 ? EventPropagationPath.CalculateDeviation(previousPropagationPath, path)

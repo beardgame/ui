@@ -8,27 +8,21 @@ namespace Bearded.UI.Events
 {
     static class EventRouter
     {
-        public delegate void RoutedEvent<in T>(Control control, T eventData) where T : RoutedEventArgs;
-
-        public static EventPropagationPath FindPropagationPath(IControlParent root, Predicate<Control> childSelector)
+        public enum PropagationTestOutcome
         {
-            var parent = root;
-            var path = new List<Control>();
-
-            while (parent != null)
-            {
-                var child = parent.Children.Reverse().FirstOrDefault(childSelector.Invoke);
-                if (child != null)
-                {
-                    path.Add(child);
-                }
-
-                parent = child as IControlParent;
-            }
-
-            return new EventPropagationPath(path.AsReadOnly());
+            Miss,
+            PassThrough,
+            Hit
         }
 
+        public delegate void RoutedEvent<in T>(Control control, T eventData) where T : RoutedEventArgs;
+        public delegate PropagationTestOutcome PropagationTest(Control control);
+
+        // Never returns the root as part of the path.
+        public static EventPropagationPath FindPropagationPath(IControlParent root, PropagationTest propagationTest) =>
+            new EventPropagationPath(findPropagationPathUsingTest(root, propagationTest).AsReadOnly());
+
+        // Never returns the root as part of the path.
         public static EventPropagationPath FindPropagationPath(IControlParent root, Control leaf)
         {
             var parent = leaf.Parent;
@@ -42,12 +36,51 @@ namespace Bearded.UI.Events
                     return EventPropagationPath.Empty;
                 }
                 path.Add(parentAsControl);
-                
+
                 parent = parentAsControl.Parent;
             }
 
             path.Reverse();
             return new EventPropagationPath(path.AsReadOnly());
+        }
+
+        private static List<Control> findPropagationPathUsingTest(IControlParent root, PropagationTest propagationTest)
+        {
+            var path = new List<Control>();
+            tryFindPropagationPathForAnyChild(root, propagationTest, path);
+            return path;
+        }
+        
+        private static bool tryFindPropagationPathForAnyChild(
+            IControlParent parent, PropagationTest propagationTest, List<Control> path) =>
+            parent.Children.Reverse()
+                .Any(child => findPropagationPathUsingTest(child, propagationTest, path));
+
+        private static bool findPropagationPathUsingTest(
+            Control root, PropagationTest propagationTest, List<Control> path)
+        {
+            var outcome = propagationTest(root);
+            switch (outcome)
+            {
+                case PropagationTestOutcome.Miss:
+                    return false;
+                case PropagationTestOutcome.PassThrough:
+                    if (!(root is IControlParent passThroughRootAsParent)) return false;
+                    path.Add(root);
+                    if (tryFindPropagationPathForAnyChild(passThroughRootAsParent, propagationTest, path))
+                    {
+                        return true;
+                    }
+                    path.RemoveAt(path.Count - 1);
+                    return false;
+                case PropagationTestOutcome.Hit:
+                    path.Add(root);
+                    if (!(root is IControlParent hitRootAsParent)) return true;
+                    tryFindPropagationPathForAnyChild(hitRootAsParent, propagationTest, path);
+                    return true;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

@@ -38,6 +38,8 @@ namespace Bearded.UI.Controls
             }
         }
 
+        public bool IsClickThrough { get; protected set; }
+
         public bool IsFocused { get; private set; }
         public bool CanBeFocused { get; protected set; }
 
@@ -69,7 +71,7 @@ namespace Bearded.UI.Controls
 
             return IsFocused;
         }
-      
+
         public void SetAnchors(HorizontalAnchors horizontal, VerticalAnchors vertical)
         {
             HorizontalAnchors = horizontal;
@@ -90,7 +92,7 @@ namespace Bearded.UI.Controls
         {
             frameNeedsUpdate = true;
         }
-        
+
         private Frame getFrame()
         {
             if (frameNeedsUpdate)
@@ -115,7 +117,7 @@ namespace Bearded.UI.Controls
         }
 
         public void RemoveFromParent() => Parent.Remove(this);
-        
+
         internal void AddTo(IControlParent parent)
         {
             if (Parent != null)
@@ -135,12 +137,12 @@ namespace Bearded.UI.Controls
 
             Parent = null;
         }
-        
+
         public virtual void Render(IRendererRouter r)
         {
             RenderStronglyTyped(r);
         }
-  
+
         protected abstract void RenderStronglyTyped(IRendererRouter r);
 
         public event GenericEventHandler<MouseEventArgs> MouseEnter;
@@ -193,7 +195,7 @@ namespace Bearded.UI.Controls
 
         protected virtual void MadeVisible() { } // Not called on initialization
         protected virtual void MadeInvisible() { }
-        
+
         protected virtual void OnAddingToParent() { }
         protected virtual void OnRemovingFromParent() { }
     }
