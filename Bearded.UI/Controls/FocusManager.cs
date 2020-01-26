@@ -27,7 +27,7 @@
 
             if (currentFocus.IsFocused)
                 currentFocus.Unfocus();
-            
+
             currentFocus = null;
         }
     }

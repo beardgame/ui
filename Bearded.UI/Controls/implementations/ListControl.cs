@@ -128,7 +128,7 @@ namespace Bearded.UI.Controls
             addCellsDownwards();
             removeCellsDownwards();
         }
-        
+
         public void OnAppendItems(int addedCount)
         {
             if (needsReload)
@@ -204,7 +204,7 @@ namespace Bearded.UI.Controls
                 addCellsUpwards();
             }
         }
-        
+
         public void Reload()
         {
             itemCount = itemSource.ItemCount;
@@ -265,10 +265,10 @@ namespace Bearded.UI.Controls
             while (cells.Count > 0)
             {
                 var lastCell = cells.Last.Value;
-                
+
                 if (lastCell.Offset < contentBottomLimit)
                     break;
-                
+
                 itemSource.DestroyItemControlAt(lastCell.Index, lastCell.Control);
 
                 contentContainer.Remove(lastCell.Control);
