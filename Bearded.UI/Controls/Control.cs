@@ -135,6 +135,8 @@ namespace Bearded.UI.Controls
 
             OnRemovingFromParent();
 
+            if (IsFocused)
+                Unfocus();
             Parent = null;
         }
 
