@@ -46,7 +46,19 @@ namespace Bearded.UI.Controls
             }
         }
 
-        public bool FocusDescendant(Control control) => Parent.FocusDescendant(control);
+        public bool FocusDescendant(Control control)
+        {
+            var isFocused = Parent.FocusDescendant(control);
+            if (isFocused)
+                SetFocused();
+            return isFocused;
+        }
+
+        public void UnfocusDescendant(Control control)
+        {
+            Parent.UnfocusDescendant(control);
+            SetUnfocused();
+        }
 
         public override void SetFrameNeedsUpdate()
         {

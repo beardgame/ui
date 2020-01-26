@@ -51,10 +51,10 @@ namespace Bearded.UI.Controls
 
         public void Unfocus()
         {
-            if (IsFocused)
-                LostFocus();
-
-            IsFocused = false;
+            if (!IsFocused)
+                return;
+            Parent.UnfocusDescendant(this);
+            SetUnfocused();
         }
 
         public virtual bool TryFocus()
@@ -64,12 +64,26 @@ namespace Bearded.UI.Controls
             if (IsFocused)
                 return true;
 
-            IsFocused = Parent.FocusDescendant(this);
+            var isFocused = Parent.FocusDescendant(this);
 
-            if (IsFocused)
-                Focused();
+            if (isFocused)
+                SetFocused();
 
-            return IsFocused;
+            return isFocused;
+        }
+
+        protected void SetFocused()
+        {
+            if (IsFocused) return;
+            IsFocused = true;
+            Focused();
+        }
+
+        protected void SetUnfocused()
+        {
+            if (!IsFocused) return;
+            IsFocused = false;
+            LostFocus();
         }
 
         public void SetAnchors(HorizontalAnchors horizontal, VerticalAnchors vertical)

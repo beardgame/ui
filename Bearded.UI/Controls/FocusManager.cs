@@ -1,4 +1,6 @@
-﻿namespace Bearded.UI.Controls
+﻿using System;
+
+namespace Bearded.UI.Controls
 {
     public class FocusManager
     {
@@ -9,7 +11,9 @@
             get
             {
                 if (currentFocus == null) return null;
-                return !currentFocus.IsFocused ? null : currentFocus;
+                if (!currentFocus.IsFocused)
+                    throw new InvalidOperationException("Found currently focused control as not focused.");
+                return currentFocus;
             }
         }
 
@@ -20,6 +24,14 @@
             currentFocus = control;
         }
 
+        public void Unfocus(Control control)
+        {
+            if (currentFocus != control)
+                throw new InvalidOperationException("Can only unfocus currently focused control.");
+
+            ensureNoFocus();
+        }
+
         private void ensureNoFocus()
         {
             if (currentFocus == null)
@@ -27,7 +39,7 @@
 
             if (currentFocus.IsFocused)
                 currentFocus.Unfocus();
-            
+
             currentFocus = null;
         }
     }
