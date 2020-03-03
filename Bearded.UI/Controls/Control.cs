@@ -38,7 +38,7 @@ namespace Bearded.UI.Controls
             }
         }
 
-        public bool IsClickThrough { get; protected set; }
+        public virtual bool IsClickThrough { get; set; }
 
         public bool IsFocused { get; private set; }
         public bool CanBeFocused { get; protected set; }

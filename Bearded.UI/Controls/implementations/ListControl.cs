@@ -9,7 +9,7 @@ namespace Bearded.UI.Controls
 {
     // TODO: fix scrolloffset - validateScolloffset recursion
     // TODO: extract scroll controls
-    // TODO: make scoll bar
+    // TODO: make scroll bar
     // TODO: allow insert/removal/update of ranges
     // TODO: refactor all control operations to only happen on frame updates to prevent crashes when calling methods early
 
@@ -67,6 +67,19 @@ namespace Bearded.UI.Controls
                 itemSource = value ?? throw new ArgumentNullException();
                 needsReload = true;
                 SetFrameNeedsUpdateIfNeeded();
+            }
+        }
+
+        private bool isClickThrough;
+
+        public override bool IsClickThrough
+        {
+            get => isClickThrough;
+            set
+            {
+                isClickThrough = value;
+                listContainer.IsClickThrough = true;
+                contentContainer.IsClickThrough = true;
             }
         }
 
@@ -128,7 +141,7 @@ namespace Bearded.UI.Controls
             addCellsDownwards();
             removeCellsDownwards();
         }
-        
+
         public void OnAppendItems(int addedCount)
         {
             if (needsReload)
@@ -204,7 +217,7 @@ namespace Bearded.UI.Controls
                 addCellsUpwards();
             }
         }
-        
+
         public void Reload()
         {
             itemCount = itemSource.ItemCount;
@@ -265,10 +278,10 @@ namespace Bearded.UI.Controls
             while (cells.Count > 0)
             {
                 var lastCell = cells.Last.Value;
-                
+
                 if (lastCell.Offset < contentBottomLimit)
                     break;
-                
+
                 itemSource.DestroyItemControlAt(lastCell.Index, lastCell.Control);
 
                 contentContainer.Remove(lastCell.Control);
@@ -356,7 +369,7 @@ namespace Bearded.UI.Controls
             createCellIfVisible(int index, double bottom, double top, double height)
         {
             var isVisible = bottom >= contentTopLimit && top <= contentBottomLimit;
-            
+
             return isVisible
                 ? (createCellControl(index, top, bottom), index, top, height)
                 : (null, index, top, height);
