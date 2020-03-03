@@ -40,21 +40,15 @@ namespace Bearded.UI.Controls
 
         public bool IsClickThrough { get; protected set; }
 
-        public bool IsFocused { get; private set; }
+        internal FocusState FocusState = FocusState.Unfocused;
+
+        public bool IsFocused => FocusState == FocusState.Focused;
         public bool CanBeFocused { get; protected set; }
 
         public void Focus()
         {
             if (!TryFocus())
                 throw new InvalidOperationException("Could not focus control.");
-        }
-
-        public void Unfocus()
-        {
-            if (IsFocused)
-                LostFocus();
-
-            IsFocused = false;
         }
 
         public virtual bool TryFocus()
@@ -64,12 +58,25 @@ namespace Bearded.UI.Controls
             if (IsFocused)
                 return true;
 
-            IsFocused = Parent.FocusDescendant(this);
-
-            if (IsFocused)
+            if (Parent.FocusDescendant(this))
+            {
+                FocusState = FocusState.Focused;
                 Focused();
+            }
 
             return IsFocused;
+        }
+
+        public virtual void Unfocus()
+        {
+            if (!IsFocused)
+                return;
+
+            Parent.UnfocusDescendant();
+            if (IsFocused)
+                LostFocus();
+
+            FocusState = FocusState.Unfocused;
         }
 
         public void SetAnchors(HorizontalAnchors horizontal, VerticalAnchors vertical)

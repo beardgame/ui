@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace Bearded.UI.Controls
         private readonly List<Control> children = new List<Control>();
 
         public ReadOnlyCollection<Control> Children { get; }
+
+        public bool HasFocusedDescendant => FocusState == FocusState.DescendantFocused;
 
         public CompositeControl()
         {
@@ -46,7 +49,36 @@ namespace Bearded.UI.Controls
             }
         }
 
-        public bool FocusDescendant(Control control) => Parent.FocusDescendant(control);
+        public bool FocusDescendant(Control control)
+        {
+            var isChildFocused = Parent.FocusDescendant(control);
+            if (isChildFocused)
+                FocusState = FocusState.DescendantFocused;
+            return isChildFocused;
+        }
+
+        public override void Unfocus()
+        {
+            switch (FocusState)
+            {
+                case FocusState.Unfocused:
+                    break;
+                case FocusState.DescendantFocused:
+                    Parent.Unfocus();
+                    break;
+                case FocusState.Focused:
+                    base.Unfocus();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        public void UnfocusDescendant()
+        {
+            Parent.UnfocusDescendant();
+            FocusState = FocusState.Unfocused;
+        }
 
         public override void SetFrameNeedsUpdate()
         {

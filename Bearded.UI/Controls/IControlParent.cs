@@ -6,9 +6,12 @@ namespace Bearded.UI.Controls
     {
         Frame Frame { get; }
         ReadOnlyCollection<Control> Children { get; }
+        bool HasFocusedDescendant { get; }
         void Add(Control child);
         void AddOnTopOf(Control reference, Control child);
         void Remove(Control child);
         bool FocusDescendant(Control control);
+        void UnfocusDescendant();
+        void Unfocus();
     }
 }

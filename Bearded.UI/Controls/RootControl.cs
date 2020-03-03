@@ -50,6 +50,7 @@ namespace Bearded.UI.Controls
         }
 
         public ReadOnlyCollection<Control> Children => controls.Children;
+        public bool HasFocusedDescendant => FocusManager.FocusedControl != null;
         public void Add(Control child) => controls.Add(child);
         public void AddOnTopOf(Control reference, Control child) => controls.AddOnTopOf(reference, child);
         public void Remove(Control child) => controls.Remove(child);
@@ -62,6 +63,11 @@ namespace Bearded.UI.Controls
             FocusManager.Focus(control);
 
             return true;
+        }
+
+        public void UnfocusDescendant()
+        {
+            FocusManager.Unfocus();
         }
     }
 }
