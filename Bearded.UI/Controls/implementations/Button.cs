@@ -26,10 +26,15 @@ namespace Bearded.UI.Controls
             base.MouseButtonReleased(eventArgs);
             if (eventArgs.MouseButton == MouseButton.Left && IsEnabled)
             {
-                Triggered?.Invoke(new TriggerEventArgs(eventArgs.ModifierKeys));
+                Trigger(new TriggerEventArgs(eventArgs.ModifierKeys));
                 Clicked?.Invoke();
             }
             eventArgs.Handled = true;
+        }
+
+        protected void Trigger(TriggerEventArgs eventArgs)
+        {
+            Triggered?.Invoke(eventArgs);
         }
 
         protected override void RenderStronglyTyped(IRendererRouter r) => r.Render(this);
