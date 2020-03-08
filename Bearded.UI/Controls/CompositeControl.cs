@@ -64,29 +64,29 @@ namespace Bearded.UI.Controls
             return true;
         }
 
-        public override void Unfocus()
+        public override void Blur()
         {
             switch (FocusState)
             {
-                case FocusState.Unfocused:
+                case FocusState.None:
                     break;
                 case FocusState.DescendantFocused:
-                    focusedDescendant.Match(control => control.Unfocus());
+                    focusedDescendant.Match(control => control.Blur());
                     break;
                 case FocusState.Focused:
-                    base.Unfocus();
+                    base.Blur();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        void IFocusParent.PropagateUnfocus()
+        void IFocusParent.PropagateBlur()
         {
-            FocusState = FocusState.Unfocused;
+            FocusState = FocusState.None;
             focusedDescendant = Maybe.Nothing;
 
-            (Parent as IFocusParent)?.PropagateUnfocus();
+            (Parent as IFocusParent)?.PropagateBlur();
         }
 
         public override void SetFrameNeedsUpdate()

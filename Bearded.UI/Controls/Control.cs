@@ -33,14 +33,14 @@ namespace Bearded.UI.Controls
                 else
                 {
                     MadeInvisible();
-                    if (IsFocused) Unfocus();
+                    if (IsFocused) Blur();
                 }
             }
         }
 
         public bool IsClickThrough { get; protected set; }
 
-        internal FocusState FocusState = FocusState.Unfocused;
+        internal FocusState FocusState = FocusState.None;
 
         public bool IsFocused => FocusState == FocusState.Focused;
         public bool CanBeFocused { get; protected set; }
@@ -67,21 +67,21 @@ namespace Bearded.UI.Controls
             return IsFocused;
         }
 
-        public virtual void Unfocus()
+        public virtual void Blur()
         {
             if (!IsFocused)
                 return;
 
-            ((IFocusParent) this).PropagateUnfocus();
+            ((IFocusParent) this).PropagateBlur();
             if (IsFocused)
                 LostFocus();
 
-            FocusState = FocusState.Unfocused;
+            FocusState = FocusState.None;
         }
 
-        void IFocusParent.PropagateUnfocus()
+        void IFocusParent.PropagateBlur()
         {
-            (Parent as IFocusParent)?.PropagateUnfocus();
+            (Parent as IFocusParent)?.PropagateBlur();
         }
 
         public void SetAnchors(HorizontalAnchors horizontal, VerticalAnchors vertical)

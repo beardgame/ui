@@ -207,7 +207,7 @@ namespace Bearded.UI.Tests.Controls
             }
         }
 
-        public static class Unfocus
+        public static class Blur
         {
             public class OnFocusedControl
             {
@@ -217,7 +217,7 @@ namespace Bearded.UI.Tests.Controls
                     var (_, child) = rootWithFocusableChild();
                     child.Focus();
 
-                    child.Unfocus();
+                    child.Blur();
 
                     child.IsFocused.Should().BeFalse();
                 }
@@ -228,7 +228,7 @@ namespace Bearded.UI.Tests.Controls
                     var (root, child) = rootWithFocusableChild();
                     child.Focus();
 
-                    child.Unfocus();
+                    child.Blur();
 
                     root.FocusManager.FocusedControl.Should().BeNull();
                 }
@@ -239,7 +239,7 @@ namespace Bearded.UI.Tests.Controls
                     var (_, child) = rootWithFocusableChild();
                     child.Focus();
 
-                    child.Unfocus();
+                    child.Blur();
 
                     child.LostFocusMethodCalled.Should().BeTrue();
                 }
@@ -250,7 +250,7 @@ namespace Bearded.UI.Tests.Controls
                     var (_, intermediate, child) = rootWithNestedFocusableChild();
                     child.Focus();
 
-                    child.Unfocus();
+                    child.Blur();
 
                     intermediate.HasFocusedDescendant.Should().BeFalse();
                 }
@@ -263,7 +263,7 @@ namespace Bearded.UI.Tests.Controls
                 {
                     var (_, child) = rootWithFocusableChild();
 
-                    child.Unfocus();
+                    child.Blur();
 
                     child.LostFocusMethodCalled.Should().BeFalse();
                 }
@@ -277,7 +277,7 @@ namespace Bearded.UI.Tests.Controls
                     var (_, intermediate, child) = rootWithNestedFocusableChild();
                     child.Focus();
 
-                    intermediate.Unfocus();
+                    intermediate.Blur();
 
                     child.IsFocused.Should().BeFalse();
                 }
@@ -288,7 +288,7 @@ namespace Bearded.UI.Tests.Controls
                     var (root, intermediate, child) = rootWithNestedFocusableChild();
                     child.Focus();
 
-                    intermediate.Unfocus();
+                    intermediate.Blur();
 
                     root.FocusManager.FocusedControl.Should().BeNull();
                 }
@@ -299,7 +299,7 @@ namespace Bearded.UI.Tests.Controls
                     var (_, intermediate, child) = rootWithNestedFocusableChild();
                     child.Focus();
 
-                    intermediate.Unfocus();
+                    intermediate.Blur();
 
                     child.LostFocusMethodCalled.Should().BeTrue();
                 }
@@ -310,7 +310,7 @@ namespace Bearded.UI.Tests.Controls
                     var (_, intermediate, child) = rootWithNestedFocusableChild();
                     child.Focus();
 
-                    intermediate.Unfocus();
+                    intermediate.Blur();
 
                     intermediate.HasFocusedDescendant.Should().BeFalse();
                 }

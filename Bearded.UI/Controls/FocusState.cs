@@ -2,7 +2,7 @@ namespace Bearded.UI.Controls
 {
     public enum FocusState
     {
-        Unfocused,
+        None,
         DescendantFocused,
         Focused
     }

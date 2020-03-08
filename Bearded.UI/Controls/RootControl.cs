@@ -65,14 +65,14 @@ namespace Bearded.UI.Controls
             return true;
         }
 
-        void IFocusParent.PropagateUnfocus()
+        void IFocusParent.PropagateBlur()
         {
-            FocusManager.Unfocus();
+            FocusManager.BlurCurrentFocus();
         }
 
-        public void Unfocus()
+        public void Blur()
         {
-            FocusManager.FocusedControl?.Unfocus();
+            FocusManager.FocusedControl?.Blur();
         }
     }
 }

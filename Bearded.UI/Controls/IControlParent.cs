@@ -11,6 +11,6 @@ namespace Bearded.UI.Controls
         void AddOnTopOf(Control reference, Control child);
         void Remove(Control child);
         bool FocusDescendant(Control control);
-        void Unfocus();
+        void Blur();
     }
 }

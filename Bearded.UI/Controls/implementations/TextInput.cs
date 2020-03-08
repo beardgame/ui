@@ -24,7 +24,7 @@ namespace Bearded.UI.Controls
                 isEnabled = value;
                 if (!isEnabled && IsFocused)
                 {
-                    Unfocus();
+                    Blur();
                 }
                 CanBeFocused = isEnabled;
             }
