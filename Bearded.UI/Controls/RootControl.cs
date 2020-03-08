@@ -5,7 +5,7 @@ using OpenTK;
 
 namespace Bearded.UI.Controls
 {
-    public class RootControl : IControlParent
+    public class RootControl : IControlParent, IFocusParent
     {
         private readonly CompositeControl controls;
 
@@ -65,9 +65,14 @@ namespace Bearded.UI.Controls
             return true;
         }
 
-        public void UnfocusDescendant()
+        void IFocusParent.PropagateUnfocus()
         {
             FocusManager.Unfocus();
+        }
+
+        public void Unfocus()
+        {
+            FocusManager.FocusedControl?.Unfocus();
         }
     }
 }

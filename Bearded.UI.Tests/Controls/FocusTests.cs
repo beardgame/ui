@@ -194,7 +194,7 @@ namespace Bearded.UI.Tests.Controls
             public class OnFocusedControl
             {
                 [Fact]
-                public void DoesNotFocusedMethod()
+                public void DoesNotCallFocusedMethod()
                 {
                     var (_, child) = rootWithFocusableChild();
                     child.Focus();

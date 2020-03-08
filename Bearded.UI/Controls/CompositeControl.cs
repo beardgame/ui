@@ -4,16 +4,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Bearded.UI.Rendering;
+using Bearded.Utilities;
 
 namespace Bearded.UI.Controls
 {
-    public class CompositeControl : Control, IControlParent, IEnumerable<Control>
+    public class CompositeControl : Control, IControlParent, IFocusParent, IEnumerable<Control>
     {
         private readonly List<Control> children = new List<Control>();
 
         public ReadOnlyCollection<Control> Children { get; }
 
         public bool HasFocusedDescendant => FocusState == FocusState.DescendantFocused;
+        private Maybe<Control> focusedDescendant = Maybe.Nothing;
 
         public CompositeControl()
         {
@@ -52,9 +54,14 @@ namespace Bearded.UI.Controls
         public bool FocusDescendant(Control control)
         {
             var isChildFocused = Parent.FocusDescendant(control);
-            if (isChildFocused)
-                FocusState = FocusState.DescendantFocused;
-            return isChildFocused;
+            if (!isChildFocused)
+            {
+                return false;
+            }
+
+            focusedDescendant = Maybe.Just(control);
+            FocusState = FocusState.DescendantFocused;
+            return true;
         }
 
         public override void Unfocus()
@@ -64,7 +71,7 @@ namespace Bearded.UI.Controls
                 case FocusState.Unfocused:
                     break;
                 case FocusState.DescendantFocused:
-                    Parent.Unfocus();
+                    focusedDescendant.Match(control => control.Unfocus());
                     break;
                 case FocusState.Focused:
                     base.Unfocus();
@@ -74,10 +81,12 @@ namespace Bearded.UI.Controls
             }
         }
 
-        public void UnfocusDescendant()
+        void IFocusParent.PropagateUnfocus()
         {
-            Parent.UnfocusDescendant();
             FocusState = FocusState.Unfocused;
+            focusedDescendant = Maybe.Nothing;
+
+            (Parent as IFocusParent)?.PropagateUnfocus();
         }
 
         public override void SetFrameNeedsUpdate()

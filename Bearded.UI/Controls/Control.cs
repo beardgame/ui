@@ -5,7 +5,7 @@ using Bearded.Utilities;
 
 namespace Bearded.UI.Controls
 {
-    public abstract class Control
+    public abstract class Control : IFocusParent
     {
         public IControlParent Parent { get; private set; }
 
@@ -72,11 +72,16 @@ namespace Bearded.UI.Controls
             if (!IsFocused)
                 return;
 
-            Parent.UnfocusDescendant();
+            ((IFocusParent) this).PropagateUnfocus();
             if (IsFocused)
                 LostFocus();
 
             FocusState = FocusState.Unfocused;
+        }
+
+        void IFocusParent.PropagateUnfocus()
+        {
+            (Parent as IFocusParent)?.PropagateUnfocus();
         }
 
         public void SetAnchors(HorizontalAnchors horizontal, VerticalAnchors vertical)
