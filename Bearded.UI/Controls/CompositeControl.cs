@@ -51,9 +51,9 @@ namespace Bearded.UI.Controls
             }
         }
 
-        public bool FocusDescendant(Control control)
+        bool IFocusParent.PropagateFocus(Control control)
         {
-            var isChildFocused = Parent.FocusDescendant(control);
+            var isChildFocused = FocusParent.PropagateFocus(control);
             if (!isChildFocused)
             {
                 return false;

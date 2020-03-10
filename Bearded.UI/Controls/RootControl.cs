@@ -55,7 +55,7 @@ namespace Bearded.UI.Controls
         public void AddOnTopOf(Control reference, Control child) => controls.AddOnTopOf(reference, child);
         public void Remove(Control child) => controls.Remove(child);
 
-        public bool FocusDescendant(Control control)
+        bool IFocusParent.PropagateFocus(Control control)
         {
             if (!control.IsDescendantOf(this))
                 throw new InvalidOperationException("Can only focus descendant.");

@@ -5,9 +5,11 @@ using Bearded.Utilities;
 
 namespace Bearded.UI.Controls
 {
-    public abstract class Control : IFocusParent
+    public abstract class Control
     {
         public IControlParent Parent { get; private set; }
+
+        internal IFocusParent FocusParent => (IFocusParent) Parent;
 
         private Frame frame;
         private bool frameNeedsUpdate = true;
@@ -58,7 +60,7 @@ namespace Bearded.UI.Controls
             if (IsFocused)
                 return true;
 
-            if (Parent.FocusDescendant(this))
+            if (FocusParent.PropagateFocus(this))
             {
                 FocusState = FocusState.Focused;
                 Focused();
@@ -72,16 +74,11 @@ namespace Bearded.UI.Controls
             if (!IsFocused)
                 return;
 
-            ((IFocusParent) this).PropagateBlur();
+            FocusParent.PropagateBlur();
             if (IsFocused)
                 LostFocus();
 
             FocusState = FocusState.None;
-        }
-
-        void IFocusParent.PropagateBlur()
-        {
-            (Parent as IFocusParent)?.PropagateBlur();
         }
 
         public void SetAnchors(HorizontalAnchors horizontal, VerticalAnchors vertical)
