@@ -18,7 +18,7 @@ namespace Bearded.UI.EventArgs
             Win = win;
         }
 
-        public static ModifierKeys None { get; } = new ModifierKeys(false, false, false, false);
+        public static ModifierKeys None { get; } = GetBuilder().Build();
 
         public static ModifierKeys FromInputManager(InputManager inputManager)
         {
@@ -27,6 +27,44 @@ namespace Bearded.UI.EventArgs
                 inputManager.IsKeyPressed(Key.LControl) || inputManager.IsKeyPressed(Key.RControl),
                 inputManager.IsKeyPressed(Key.LAlt) || inputManager.IsKeyPressed(Key.RAlt),
                 inputManager.IsKeyPressed(Key.LWin) || inputManager.IsKeyPressed(Key.RWin));
+        }
+
+        public static Builder GetBuilder() => new Builder();
+
+        public sealed class Builder
+        {
+            private bool shift;
+            private bool control;
+            private bool alt;
+            private bool win;
+
+            internal Builder() {}
+
+            public Builder IncludeShift()
+            {
+                shift = true;
+                return this;
+            }
+
+            public Builder IncludeControl()
+            {
+                control = true;
+                return this;
+            }
+
+            public Builder IncludeAlt()
+            {
+                alt = true;
+                return this;
+            }
+
+            public Builder IncludeWin()
+            {
+                win = true;
+                return this;
+            }
+
+            public ModifierKeys Build() => new ModifierKeys(shift, control, alt, win);
         }
     }
 }
