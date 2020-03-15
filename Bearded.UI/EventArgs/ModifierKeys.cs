@@ -18,6 +18,8 @@ namespace Bearded.UI.EventArgs
             Win = win;
         }
 
+        public static ModifierKeys None { get; } = new ModifierKeys(false, false, false, false);
+
         public static ModifierKeys FromInputManager(InputManager inputManager)
         {
             return new ModifierKeys(
