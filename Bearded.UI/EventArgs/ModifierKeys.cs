@@ -1,9 +1,10 @@
+using System;
 using Bearded.Utilities.Input;
 using OpenTK.Input;
 
 namespace Bearded.UI.EventArgs
 {
-    public sealed class ModifierKeys
+    public sealed class ModifierKeys : IEquatable<ModifierKeys>
     {
         public bool Shift { get; }
         public bool Control { get; }
@@ -66,5 +67,37 @@ namespace Bearded.UI.EventArgs
 
             public ModifierKeys Build() => new ModifierKeys(shift, control, alt, win);
         }
+
+        public bool IsSupersetOf(ModifierKeys other) =>
+            (Shift && other.Shift) == other.Shift &&
+            (Control && other.Control) == other.Control &&
+            (Alt && other.Alt) == other.Alt &&
+            (Win && other.Win) == other.Win;
+
+        public bool Equals(ModifierKeys other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Shift == other?.Shift && Control == other.Control && Alt == other.Alt && Win == other.Win;
+        }
+
+        public override bool Equals(object obj) =>
+            ReferenceEquals(this, obj) || obj is ModifierKeys other && Equals(other);
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Shift.GetHashCode();
+                hashCode = (hashCode * 397) ^ Control.GetHashCode();
+                hashCode = (hashCode * 397) ^ Alt.GetHashCode();
+                hashCode = (hashCode * 397) ^ Win.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(ModifierKeys left, ModifierKeys right) => Equals(left, right);
+
+        public static bool operator !=(ModifierKeys left, ModifierKeys right) => !Equals(left, right);
     }
 }
