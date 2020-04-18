@@ -498,6 +498,125 @@ namespace Bearded.UI.Tests.Controls
             }
         }
 
+        public static class RemoveFromParent
+        {
+            public class OnFocusedControl
+            {
+                [Fact]
+                public void SetsIsFocusedFalse()
+                {
+                    var (_, _, child) = rootWithNestedFocusableChild();
+                    child.Focus();
+
+                    child.RemoveFromParent();
+
+                    child.IsFocused.Should().BeFalse();
+                }
+
+                [Fact]
+                public void CallsLostFocused()
+                {
+                    var (_, _, child) = rootWithNestedFocusableChild();
+                    child.Focus();
+
+                    child.RemoveFromParent();
+
+                    child.LostFocusMethodCalled.Should().BeTrue();
+                }
+
+                [Fact]
+                public void SetsHasFocusedDescendantFalseOnParent()
+                {
+                    var (_, intermediate, child) = rootWithNestedFocusableChild();
+                    child.Focus();
+
+                    child.RemoveFromParent();
+
+                    intermediate.HasFocusedDescendant.Should().BeFalse();
+                }
+
+                [Fact]
+                public void SetsHasFocusedDescendantFalseOnRoot()
+                {
+                    var (root, _, child) = rootWithNestedFocusableChild();
+                    child.Focus();
+
+                    child.RemoveFromParent();
+
+                    root.HasFocusedDescendant.Should().BeFalse();
+                }
+
+                [Fact]
+                public void ResetsFocusManagerFocusedControl()
+                {
+                    var (root, _, child) = rootWithNestedFocusableChild();
+                    child.Focus();
+
+                    child.RemoveFromParent();;
+
+                    root.FocusManager.FocusedControl.Should().BeNull();
+                }
+            }
+
+            public class OnParentOfFocusedControl
+            {
+                [Fact]
+                public void SetsIsFocusedFalseOnChild()
+                {
+                    var (root, intermediate, child) = rootWithNestedFocusableChild();
+                    child.Focus();
+
+                    intermediate.RemoveFromParent();
+
+                    child.IsFocused.Should().BeFalse();
+                }
+
+                [Fact]
+                public void CallsLostFocusedOnChild()
+                {
+                    var (root, intermediate, child) = rootWithNestedFocusableChild();
+                    child.Focus();
+
+                    intermediate.RemoveFromParent();
+
+                    child.LostFocusMethodCalled.Should().BeTrue();
+                }
+
+                [Fact]
+                public void SetsHasFocusedDescendantFalse()
+                {
+                    var (_, intermediate, child) = rootWithNestedFocusableChild();
+                    child.Focus();
+
+                    intermediate.RemoveFromParent();
+
+                    intermediate.HasFocusedDescendant.Should().BeFalse();
+                }
+
+                [Fact]
+                public void SetsHasFocusedDescendantFalseOnRoot()
+                {
+                    var (root, intermediate, child) = rootWithNestedFocusableChild();
+                    child.Focus();
+
+                    intermediate.RemoveFromParent();
+
+                    root.HasFocusedDescendant.Should().BeFalse();
+                }
+
+                [Fact]
+                public void ResetsFocusManagerFocusedControl()
+                {
+                    var (root, intermediate, child) = rootWithNestedFocusableChild();
+                    child.Focus();
+
+                    intermediate.RemoveFromParent();
+
+                    root.FocusManager.FocusedControl.Should().BeNull();
+                }
+            }
+        }
+
         // root - child
         private static (RootControl, TestControl) rootWithFocusableChild()
         {

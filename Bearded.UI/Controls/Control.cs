@@ -142,6 +142,7 @@ namespace Bearded.UI.Controls
             if (parent != Parent)
                 throw new InvalidOperationException();
 
+            Blur();
             OnRemovingFromParent();
 
             Parent = null;
