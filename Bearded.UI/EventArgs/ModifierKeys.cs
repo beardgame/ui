@@ -4,7 +4,7 @@ using OpenTK.Input;
 
 namespace Bearded.UI.EventArgs
 {
-    public sealed class ModifierKeys : IEquatable<ModifierKeys>
+    public readonly struct ModifierKeys : IEquatable<ModifierKeys>
     {
         public bool Shift { get; }
         public bool Control { get; }
