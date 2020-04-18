@@ -74,15 +74,10 @@ namespace Bearded.UI.EventArgs
             (Alt && other.Alt) == other.Alt &&
             (Win && other.Win) == other.Win;
 
-        public bool Equals(ModifierKeys other)
-        {
-            if (ReferenceEquals(null, other)) return false;
-            if (ReferenceEquals(this, other)) return true;
-            return Shift == other?.Shift && Control == other.Control && Alt == other.Alt && Win == other.Win;
-        }
+        public bool Equals(ModifierKeys other) =>
+            Shift == other.Shift && Control == other.Control && Alt == other.Alt && Win == other.Win;
 
-        public override bool Equals(object obj) =>
-            ReferenceEquals(this, obj) || obj is ModifierKeys other && Equals(other);
+        public override bool Equals(object obj) => obj is ModifierKeys other && Equals(other);
 
         public override int GetHashCode()
         {
