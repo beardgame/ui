@@ -1,35 +1,38 @@
 ﻿using System;
+using Bearded.Utilities;
 
 namespace Bearded.UI.Controls
 {
     public class FocusManager
     {
-        private Control currentFocus;
+        private Maybe<Control> currentFocus;
 
-        public Control FocusedControl => currentFocus;
+        public Maybe<Control> FocusedControl => currentFocus;
 
         public void Focus(Control control)
         {
             ensureNoControlFocused();
 
-            currentFocus = control;
+            currentFocus = Maybe.Just(control);
         }
 
         public void BlurCurrentFocus()
         {
-            currentFocus = null;
+            currentFocus = Maybe.Nothing;
         }
 
         private void ensureNoControlFocused()
         {
-            if (currentFocus == null)
-                return;
-
-            if (!currentFocus.IsFocused)
-                throw new InvalidOperationException("Control was set as unfocused without resetting focus manager.");
-
-            currentFocus.Blur();
-            currentFocus = null;
+            currentFocus.Match(focus =>
+            {
+                if (!focus.IsFocused)
+                {
+                    throw new InvalidOperationException(
+                        "Control was set as unfocused without resetting focus manager.");
+                }
+                focus.Blur();
+            });
+            currentFocus = Maybe.Nothing;
         }
     }
 }

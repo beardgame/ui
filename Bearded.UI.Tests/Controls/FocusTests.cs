@@ -1,6 +1,7 @@
 using System;
 using Bearded.UI.Controls;
 using Bearded.UI.Rendering;
+using Bearded.Utilities.Testing;
 using FluentAssertions;
 using Xunit;
 
@@ -31,7 +32,7 @@ namespace Bearded.UI.Tests.Controls
             {
                 var (root, _) = rootWithFocusableChild();
 
-                root.FocusManager.FocusedControl.Should().BeNull();
+                root.FocusManager.FocusedControl.Should().BeNothing();
             }
         }
 
@@ -56,7 +57,7 @@ namespace Bearded.UI.Tests.Controls
 
                     child.Focus();
 
-                    root.FocusManager.FocusedControl.Should().Be(child);
+                    root.FocusManager.FocusedControl.Should().BeJust(child);
                 }
 
                 [Fact]
@@ -143,7 +144,7 @@ namespace Bearded.UI.Tests.Controls
 
                     child2.Focus();
 
-                    root.FocusManager.FocusedControl.Should().Be(child2);
+                    root.FocusManager.FocusedControl.Should().BeJust(child2);
                 }
 
                 [Fact]
@@ -389,7 +390,7 @@ namespace Bearded.UI.Tests.Controls
 
                     child.Blur();
 
-                    root.FocusManager.FocusedControl.Should().BeNull();
+                    root.FocusManager.FocusedControl.Should().BeNothing();
                 }
 
                 [Fact]
@@ -460,7 +461,7 @@ namespace Bearded.UI.Tests.Controls
 
                     intermediate.Blur();
 
-                    root.FocusManager.FocusedControl.Should().BeNull();
+                    root.FocusManager.FocusedControl.Should().BeNothing();
                 }
 
                 [Fact]
@@ -554,7 +555,7 @@ namespace Bearded.UI.Tests.Controls
 
                     child.RemoveFromParent();;
 
-                    root.FocusManager.FocusedControl.Should().BeNull();
+                    root.FocusManager.FocusedControl.Should().BeNothing();
                 }
             }
 
@@ -612,7 +613,7 @@ namespace Bearded.UI.Tests.Controls
 
                     intermediate.RemoveFromParent();
 
-                    root.FocusManager.FocusedControl.Should().BeNull();
+                    root.FocusManager.FocusedControl.Should().BeNothing();
                 }
             }
         }
