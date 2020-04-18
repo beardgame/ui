@@ -70,27 +70,21 @@ namespace Bearded.UI.Controls
             }
         }
 
-        private bool isClickThrough;
-
-        public override bool IsClickThrough
-        {
-            get => isClickThrough;
-            set
-            {
-                isClickThrough = value;
-                listContainer.IsClickThrough = true;
-                contentContainer.IsClickThrough = true;
-            }
-        }
+        public static ListControl ClickThrough(
+                CompositeControl listContainer = null, bool startStuckToBottom = false) =>
+            new ListControl(
+                listContainer ?? CompositeControl.ClickThrough(), CompositeControl.ClickThrough(), startStuckToBottom);
 
         public ListControl(CompositeControl listContainer = null, bool startStuckToBottom = false)
+            : this(listContainer ?? new CompositeControl(), new CompositeControl(), startStuckToBottom) {}
+
+        private ListControl(CompositeControl listContainer, CompositeControl contentContainer, bool startStuckToBottom)
         {
             this.listContainer = listContainer ?? new CompositeControl();
             CurrentlyStuckToBottom = startStuckToBottom;
 
             Add(this.listContainer);
 
-            contentContainer = new CompositeControl();
             this.listContainer.Add(contentContainer);
         }
 
