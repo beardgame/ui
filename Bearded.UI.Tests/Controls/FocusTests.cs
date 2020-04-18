@@ -92,7 +92,7 @@ namespace Bearded.UI.Tests.Controls
                 [Fact]
                 public void SetsHasFocusedDescendantTrueOnRoot()
                 {
-                    var (root, child) = rootWithFocusableChild();
+                    var (root, _, child) = rootWithNestedFocusableChild();
 
                     child.Focus();
 
@@ -182,7 +182,7 @@ namespace Bearded.UI.Tests.Controls
                 [Fact]
                 public void RetainsHasFocusedDescendantTrueOnRoot()
                 {
-                    var (root, child1, child2) = rootWithTwoFocusableChildren();
+                    var (root, _, child1, child2) = rootWithTwoFocusableChildrenSharingParent();
                     child1.Focus();
 
                     child2.Focus();
@@ -203,6 +203,165 @@ namespace Bearded.UI.Tests.Controls
                     child.Focus();
 
                     child.FocusedMethodCalled.Should().BeFalse();
+                }
+            }
+
+            public class OnIntermediateControlWithNoFocusedControl
+            {
+                [Fact]
+                public void SetsIsFocusedTrue()
+                {
+                    var (_, intermediate, _) = rootWithFocusableIntermediateAndChild();
+
+                    intermediate.Focus();
+
+                    intermediate.IsFocused.Should().BeTrue();
+                }
+
+                [Fact]
+                public void CallsFocusedMethod()
+                {
+                    var (_, intermediate, _) = rootWithFocusableIntermediateAndChild();
+
+                    intermediate.Focus();
+
+                    intermediate.FocusedMethodCalled.Should().BeTrue();
+                }
+
+                [Fact]
+                public void DoesNotFocusChild()
+                {
+                    var (_, intermediate, child) = rootWithFocusableIntermediateAndChild();
+
+                    intermediate.Focus();
+
+                    child.IsFocused.Should().BeFalse();
+                }
+
+                [Fact]
+                public void DoesNotSetHasFocusedDescendantTrueOnIntermediate()
+                {
+                    var (_, intermediate, _) = rootWithFocusableIntermediateAndChild();
+
+                    intermediate.Focus();
+
+                    intermediate.HasFocusedDescendant.Should().BeFalse();
+                }
+            }
+
+            public class OnIntermediateControlWithFocusedChild
+            {
+                [Fact]
+                public void SetsIsFocusedTrue()
+                {
+                    var (_, intermediate, child) = rootWithFocusableIntermediateAndChild();
+                    child.Focus();
+
+                    intermediate.Focus();
+
+                    intermediate.IsFocused.Should().BeTrue();
+                }
+
+                [Fact]
+                public void SetsHasFocusedDescendantFalse()
+                {
+                    var (_, intermediate, child) = rootWithFocusableIntermediateAndChild();
+                    child.Focus();
+
+                    intermediate.Focus();
+
+                    intermediate.HasFocusedDescendant.Should().BeFalse();
+                }
+
+                [Fact]
+                public void SetsIsFocusedFalseOnChild()
+                {
+                    var (_, intermediate, child) = rootWithFocusableIntermediateAndChild();
+                    child.Focus();
+
+                    intermediate.Focus();
+
+                    child.IsFocused.Should().BeFalse();
+                }
+
+                [Fact]
+                public void CallsLostFocusMethodOnChild()
+                {
+                    var (_, intermediate, child) = rootWithFocusableIntermediateAndChild();
+                    child.Focus();
+
+                    intermediate.Focus();
+
+                    child.LostFocusMethodCalled.Should().BeTrue();
+                }
+
+                [Fact]
+                public void RetainsHasFocusedDescendantTrueOnRoot()
+                {
+                    var (root, intermediate, child) = rootWithFocusableIntermediateAndChild();
+                    child.Focus();
+
+                    intermediate.Focus();
+
+                    root.HasFocusedDescendant.Should().BeTrue();
+                }
+            }
+
+            public class OnControlWithFocusedParent
+            {
+                [Fact]
+                public void SetsIsFocusedTrue()
+                {
+                    var (_, intermediate, child) = rootWithFocusableIntermediateAndChild();
+                    intermediate.Focus();
+
+                    child.Focus();
+
+                    child.IsFocused.Should().BeTrue();
+                }
+
+                [Fact]
+                public void SetsHasFocusedDescendantTrueOnParent()
+                {
+                    var (_, intermediate, child) = rootWithFocusableIntermediateAndChild();
+                    intermediate.Focus();
+
+                    child.Focus();
+
+                    intermediate.HasFocusedDescendant.Should().BeTrue();
+                }
+
+                [Fact]
+                public void SetsIsFocusedFalseOnParent()
+                {
+                    var (_, intermediate, child) = rootWithFocusableIntermediateAndChild();
+                    intermediate.Focus();
+
+                    child.Focus();
+
+                    intermediate.IsFocused.Should().BeFalse();
+                }
+
+                [Fact]
+                public void CallsLostFocusMethodOnParent()
+                {
+                    var (_, intermediate, child) = rootWithFocusableIntermediateAndChild();
+                    intermediate.Focus();
+
+                    child.Focus();
+
+                    intermediate.LostFocusMethodCalled.Should().BeTrue();
+                }
+
+                [Fact]
+                public void RetainsHasFocusedDescendantTrueOnRoot()
+                {
+                    var (root, intermediate, child) = rootWithFocusableIntermediateAndChild();
+                    intermediate.Focus();
+
+                    child.Focus();
+
+                    root.HasFocusedDescendant.Should().BeTrue();
                 }
             }
         }
@@ -253,6 +412,17 @@ namespace Bearded.UI.Tests.Controls
                     child.Blur();
 
                     intermediate.HasFocusedDescendant.Should().BeFalse();
+                }
+
+                [Fact]
+                public void SetsHasFocusedDescendantFalseOnRoot()
+                {
+                    var (root, _, child) = rootWithNestedFocusableChild();
+                    child.Focus();
+
+                    child.Blur();
+
+                    root.HasFocusedDescendant.Should().BeFalse();
                 }
             }
 
@@ -305,7 +475,7 @@ namespace Bearded.UI.Tests.Controls
                 }
 
                 [Fact]
-                public void SetsHasFocusedDescendantFalse()
+                public void SetsHasFocusedDescendantFalseOnParent()
                 {
                     var (_, intermediate, child) = rootWithNestedFocusableChild();
                     child.Focus();
@@ -313,6 +483,17 @@ namespace Bearded.UI.Tests.Controls
                     intermediate.Blur();
 
                     intermediate.HasFocusedDescendant.Should().BeFalse();
+                }
+
+                [Fact]
+                public void SetsHasFocusedDescendantFalseOnRoot()
+                {
+                    var (root, intermediate, child) = rootWithNestedFocusableChild();
+                    child.Focus();
+
+                    intermediate.Blur();
+
+                    root.HasFocusedDescendant.Should().BeFalse();
                 }
             }
         }
@@ -331,6 +512,17 @@ namespace Bearded.UI.Tests.Controls
         {
             var root = new RootControl();
             var intermediateNode = new CompositeControl();
+            var child = new FocusableTestControl();
+            root.Add(intermediateNode);
+            intermediateNode.Add(child);
+            return (root, intermediateNode, child);
+        }
+
+        // root - intermediate - child
+        private static (RootControl, TestCompositeControl, TestControl) rootWithFocusableIntermediateAndChild()
+        {
+            var root = new RootControl();
+            var intermediateNode = new TestCompositeControl();
             var child = new FocusableTestControl();
             root.Add(intermediateNode);
             intermediateNode.Add(child);
@@ -388,6 +580,29 @@ namespace Bearded.UI.Tests.Controls
             var child = new NonFocusableTestControl();
             root.Add(child);
             return (root, child);
+        }
+
+        private class TestCompositeControl : CompositeControl
+        {
+            internal bool FocusedMethodCalled;
+            internal bool LostFocusMethodCalled;
+
+            internal TestCompositeControl()
+            {
+                CanBeFocused = true;
+            }
+
+            protected override void Focused()
+            {
+                base.Focused();
+                FocusedMethodCalled = true;
+            }
+
+            protected override void LostFocus()
+            {
+                base.LostFocus();
+                LostFocusMethodCalled = true;
+            }
         }
 
         private class FocusableTestControl : TestControl
