@@ -553,7 +553,7 @@ namespace Bearded.UI.Tests.Controls
                     var (root, _, child) = rootWithNestedFocusableChild();
                     child.Focus();
 
-                    child.RemoveFromParent();;
+                    child.RemoveFromParent();
 
                     root.FocusManager.FocusedControl.Should().BeNothing();
                 }
@@ -564,7 +564,7 @@ namespace Bearded.UI.Tests.Controls
                 [Fact]
                 public void SetsIsFocusedFalseOnChild()
                 {
-                    var (root, intermediate, child) = rootWithNestedFocusableChild();
+                    var (_, intermediate, child) = rootWithNestedFocusableChild();
                     child.Focus();
 
                     intermediate.RemoveFromParent();
@@ -575,7 +575,7 @@ namespace Bearded.UI.Tests.Controls
                 [Fact]
                 public void CallsLostFocusedOnChild()
                 {
-                    var (root, intermediate, child) = rootWithNestedFocusableChild();
+                    var (_, intermediate, child) = rootWithNestedFocusableChild();
                     child.Focus();
 
                     intermediate.RemoveFromParent();
