@@ -102,7 +102,10 @@ namespace Bearded.UI.Controls
                 onScrollUp();
             }
 
-            eventArgs.Handled = true;
+            if (offsetAfter != offsetBefore)
+            {
+                eventArgs.Handled = true;
+            }
         }
 
         public void ScrollToTop()
