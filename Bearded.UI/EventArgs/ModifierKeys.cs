@@ -1,5 +1,5 @@
 using Bearded.Utilities.Input;
-using OpenTK.Input;
+using OpenToolkit.Windowing.Common.Input;
 
 namespace Bearded.UI.EventArgs
 {
