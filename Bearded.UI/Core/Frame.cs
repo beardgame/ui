@@ -1,4 +1,4 @@
-﻿using OpenTK;
+﻿using OpenToolkit.Mathematics;
 
 namespace Bearded.UI
 {
@@ -9,7 +9,7 @@ namespace Bearded.UI
 
         public Vector2d TopLeft => new Vector2d(X.Start, Y.Start);
         public Vector2d Size => new Vector2d(X.Size, Y.Size);
-        
+
         public Frame(Interval x, Interval y)
         {
             X = x;
