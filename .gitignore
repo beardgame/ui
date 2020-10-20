@@ -187,3 +187,6 @@ FakesAssemblies/
 
 # Rider files
 .idea/
+
+# Vim swap files
+*.swp
