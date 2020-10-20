@@ -10,6 +10,8 @@
     <PackageTags>ui,game,gamedev</PackageTags>
     <PackageVersion>0.0.0</PackageVersion>
     <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin/Debug/</OutputPath>
