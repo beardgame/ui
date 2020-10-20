@@ -9,6 +9,9 @@ namespace Bearded.UI.Navigation
 
         public void Add<T>(T dependency)
         {
+            if (dependency == null)
+                throw new ArgumentNullException(nameof(dependency));
+
             dict[typeof(T)] = dependency;
         }
 
@@ -17,7 +20,19 @@ namespace Bearded.UI.Navigation
             return (T) dict[typeof(T)];
         }
 
-        public bool TryResolve<T>(out T value)
+        public bool TryResolve<T>([NotNullWhen(returnValue: true)] out T? value) where T : class
+        {
+            if (dict.TryGetValue(typeof(T), out var obj))
+            {
+                value = (T) obj;
+                return true;
+            }
+
+            value = null;
+            return false;
+        }
+
+        public bool TryResolve<T>(out T? value) where T : struct
         {
             if (dict.TryGetValue(typeof(T), out var obj))
             {

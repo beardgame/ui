@@ -8,7 +8,7 @@ namespace Bearded.UI.Controls
 {
     public class TextInput : Control
     {
-        public event VoidEventHandler TextChanged;
+        public event VoidEventHandler? TextChanged;
 
         private bool isEnabled;
         private string text = "";
@@ -19,7 +19,8 @@ namespace Bearded.UI.Controls
             get => isEnabled;
             set
             {
-                if (value == isEnabled) return;
+                if (value == isEnabled)
+                    return;
 
                 isEnabled = value;
                 if (!isEnabled && IsFocused)
@@ -101,7 +102,8 @@ namespace Bearded.UI.Controls
 
         public override void CharacterTyped(CharEventArgs eventArgs)
         {
-            if (!isEnabled) return;
+            if (!isEnabled)
+                return;
             InsertTextAtCursor(eventArgs.Character.ToString());
             eventArgs.Handled = true;
         }

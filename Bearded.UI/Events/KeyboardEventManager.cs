@@ -8,12 +8,12 @@ namespace Bearded.UI.Events
     {
         private readonly RootControl root;
         private readonly InputManager inputManager;
-        private readonly IKeyboardEventsCapturer eventsCapturer;
+        private readonly IKeyboardEventsCapturer? eventsCapturer;
 
         internal KeyboardEventManager(
             RootControl root,
             InputManager inputManager,
-            IKeyboardEventsCapturer eventsCapturer)
+            IKeyboardEventsCapturer? eventsCapturer)
         {
             this.root = root;
             this.inputManager = inputManager;
@@ -40,7 +40,8 @@ namespace Bearded.UI.Events
                         args,
                         (c, e) => c.PreviewKeyHit(e),
                         (c, e) => c.KeyHit(e));
-                    if (!args.Handled) eventsCapturer?.KeyHit(args);
+                    if (!args.Handled)
+                        eventsCapturer?.KeyHit(args);
                 }
                 else
                 {
@@ -48,7 +49,8 @@ namespace Bearded.UI.Events
                         args,
                         (c, e) => c.PreviewKeyReleased(e),
                         (c, e) => c.KeyReleased(e));
-                    if (!args.Handled) eventsCapturer?.KeyReleased(args);
+                    if (!args.Handled)
+                        eventsCapturer?.KeyReleased(args);
                 }
             }
 

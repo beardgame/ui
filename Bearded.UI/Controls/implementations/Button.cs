@@ -7,7 +7,7 @@ namespace Bearded.UI.Controls
 {
     public class Button : CompositeControl
     {
-        public event VoidEventHandler Clicked;
+        public event VoidEventHandler? Clicked;
 
         public bool IsEnabled { get; set; } = true;
 

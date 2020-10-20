@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -46,7 +47,13 @@ namespace Bearded.UI.Controls
             }
         }
 
-        public bool FocusDescendant(Control control) => Parent.FocusDescendant(control);
+        public bool FocusDescendant(Control control)
+        {
+            if (Parent == null)
+                throw new InvalidOperationException("This control doesn't have a parent.");
+
+            return Parent.FocusDescendant(control);
+        }
 
         public override void SetFrameNeedsUpdate()
         {

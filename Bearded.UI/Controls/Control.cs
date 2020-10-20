@@ -7,7 +7,7 @@ namespace Bearded.UI.Controls
 {
     public abstract class Control
     {
-        public IControlParent Parent { get; private set; }
+        public IControlParent? Parent { get; private set; }
 
         private Frame frame;
         private bool frameNeedsUpdate = true;
@@ -23,7 +23,8 @@ namespace Bearded.UI.Controls
             get => isVisible;
             set
             {
-                if (isVisible == value) return;
+                if (isVisible == value)
+                    return;
                 isVisible = value;
 
                 if (isVisible)
@@ -33,7 +34,8 @@ namespace Bearded.UI.Controls
                 else
                 {
                     MadeInvisible();
-                    if (IsFocused) Unfocus();
+                    if (IsFocused)
+                        Unfocus();
                 }
             }
         }
@@ -64,6 +66,9 @@ namespace Bearded.UI.Controls
             if (IsFocused)
                 return true;
 
+            if (Parent == null)
+                throw new InvalidOperationException("Cannot focus a control without a parent.");
+
             IsFocused = Parent.FocusDescendant(this);
 
             if (IsFocused)
@@ -90,6 +95,9 @@ namespace Bearded.UI.Controls
 
         public virtual void SetFrameNeedsUpdate()
         {
+            if (Parent == null)
+                throw new InvalidOperationException("Controls without a parent don't need updates.");
+
             frameNeedsUpdate = true;
         }
 
@@ -105,6 +113,9 @@ namespace Bearded.UI.Controls
 
         private void recalculateFrame()
         {
+            if (Parent == null)
+                throw new InvalidOperationException("Trying to recalculate frames on a control without a parent.");
+
             var parentFrame = Parent.Frame;
 
             frame = new Frame(
@@ -116,12 +127,18 @@ namespace Bearded.UI.Controls
             FrameChanged();
         }
 
-        public void RemoveFromParent() => Parent.Remove(this);
+        public void RemoveFromParent()
+        {
+            if (Parent == null)
+                throw new InvalidOperationException("This control doesn't have a parent.");
+
+            Parent.Remove(this);
+        }
 
         internal void AddTo(IControlParent parent)
         {
             if (Parent != null)
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("This control already has a parent.");
 
             Parent = parent;
 
@@ -131,7 +148,7 @@ namespace Bearded.UI.Controls
         internal void RemoveFrom(IControlParent parent)
         {
             if (parent != Parent)
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("This control has a different parent.");
 
             OnRemovingFromParent();
 
@@ -145,11 +162,11 @@ namespace Bearded.UI.Controls
 
         protected abstract void RenderStronglyTyped(IRendererRouter r);
 
-        public event GenericEventHandler<MouseEventArgs> MouseEnter;
-        public event GenericEventHandler<MouseEventArgs> MouseMove;
-        public event GenericEventHandler<MouseEventArgs> MouseExit;
-        public event GenericEventHandler<MouseButtonEventArgs> MouseButtonDown;
-        public event GenericEventHandler<MouseButtonEventArgs> MouseButtonRelease;
+        public event GenericEventHandler<MouseEventArgs>? MouseEnter;
+        public event GenericEventHandler<MouseEventArgs>? MouseMove;
+        public event GenericEventHandler<MouseEventArgs>? MouseExit;
+        public event GenericEventHandler<MouseButtonEventArgs>? MouseButtonDown;
+        public event GenericEventHandler<MouseButtonEventArgs>? MouseButtonRelease;
 
         public virtual void PreviewMouseEntered(MouseEventArgs eventArgs) { }
         public virtual void MouseEntered(MouseEventArgs eventArgs)

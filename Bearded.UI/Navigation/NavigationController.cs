@@ -14,7 +14,7 @@ namespace Bearded.UI.Navigation
         private readonly IDictionary<Type, object> viewFactories;
         private readonly IDictionary<INavigationNode, Control> viewsByModel = new Dictionary<INavigationNode, Control>();
 
-        public event VoidEventHandler Exited;
+        public event VoidEventHandler? Exited;
 
         public NavigationController(
             IControlParent root,

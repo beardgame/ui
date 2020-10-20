@@ -2,13 +2,14 @@
 {
     public class FocusManager
     {
-        private Control currentFocus;
+        private Control? currentFocus;
 
-        public Control FocusedControl
+        public Control? FocusedControl
         {
             get
             {
-                if (currentFocus == null) return null;
+                if (currentFocus == null)
+                    return null;
                 return !currentFocus.IsFocused ? null : currentFocus;
             }
         }
