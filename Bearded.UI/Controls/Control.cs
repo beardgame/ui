@@ -15,7 +15,18 @@ namespace Bearded.UI.Controls
         public HorizontalAnchors HorizontalAnchors { get; private set; } = Anchors.Default.H;
         public VerticalAnchors VerticalAnchors { get; private set; } = Anchors.Default.V;
 
-        public Frame Frame => getFrame();
+        public Frame Frame
+        {
+            get
+            {
+                if (frameNeedsUpdate)
+                {
+                    recalculateFrame();
+                }
+
+                return frame;
+            }
+        }
 
         private bool isVisible = true;
         public bool IsVisible
@@ -43,7 +54,20 @@ namespace Bearded.UI.Controls
         public bool IsClickThrough { get; protected set; }
 
         public bool IsFocused { get; private set; }
-        public bool CanBeFocused { get; protected set; }
+
+        private bool canBeFocused = false;
+        public bool CanBeFocused
+        {
+            get => canBeFocused;
+            protected set
+            {
+                if (!value && IsFocused)
+                {
+                    Unfocus();
+                }
+                canBeFocused = value;
+            }
+        }
 
         public void Focus()
         {
@@ -99,16 +123,6 @@ namespace Bearded.UI.Controls
                 throw new InvalidOperationException("Controls without a parent don't need updates.");
 
             frameNeedsUpdate = true;
-        }
-
-        private Frame getFrame()
-        {
-            if (frameNeedsUpdate)
-            {
-                recalculateFrame();
-            }
-
-            return frame;
         }
 
         private void recalculateFrame()
