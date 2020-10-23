@@ -8,6 +8,7 @@ namespace Bearded.UI
 
     /// <summary>Specifies that when a method returns <see cref="ReturnValue"/>, the parameter will not be null even if the corresponding type allows it.</summary>
     [AttributeUsage(AttributeTargets.Parameter, Inherited = false)]
+    [Obsolete("Necessary until the project is migrated to .NET Core")]
     internal sealed class NotNullWhenAttribute : Attribute
     {
         /// <summary>Initializes the attribute with the specified return value condition.</summary>

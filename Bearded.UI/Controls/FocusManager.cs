@@ -8,8 +8,7 @@
         {
             get
             {
-                if (currentFocus == null)
-                    return null;
+                if (currentFocus == null) return null;
                 return !currentFocus.IsFocused ? null : currentFocus;
             }
         }

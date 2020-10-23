@@ -34,8 +34,7 @@ namespace Bearded.UI.Controls
             get => isVisible;
             set
             {
-                if (isVisible == value)
-                    return;
+                if (isVisible == value) return;
                 isVisible = value;
 
                 if (isVisible)
@@ -45,8 +44,7 @@ namespace Bearded.UI.Controls
                 else
                 {
                     MadeInvisible();
-                    if (IsFocused)
-                        Unfocus();
+                    if (IsFocused) Unfocus();
                 }
             }
         }
@@ -55,19 +53,7 @@ namespace Bearded.UI.Controls
 
         public bool IsFocused { get; private set; }
 
-        private bool canBeFocused = false;
-        public bool CanBeFocused
-        {
-            get => canBeFocused;
-            protected set
-            {
-                if (!value && IsFocused)
-                {
-                    Unfocus();
-                }
-                canBeFocused = value;
-            }
-        }
+        public bool CanBeFocused { get; protected set; }
 
         public void Focus()
         {
@@ -85,13 +71,13 @@ namespace Bearded.UI.Controls
 
         public virtual bool TryFocus()
         {
+            if (Parent == null)
+                throw new InvalidOperationException("Cannot focus a control without a parent.");
+
             if (!CanBeFocused || !IsVisible)
                 return false;
             if (IsFocused)
                 return true;
-
-            if (Parent == null)
-                throw new InvalidOperationException("Cannot focus a control without a parent.");
 
             IsFocused = Parent.FocusDescendant(this);
 
@@ -119,9 +105,6 @@ namespace Bearded.UI.Controls
 
         public virtual void SetFrameNeedsUpdate()
         {
-            if (Parent == null)
-                throw new InvalidOperationException("Controls without a parent don't need updates.");
-
             frameNeedsUpdate = true;
         }
 

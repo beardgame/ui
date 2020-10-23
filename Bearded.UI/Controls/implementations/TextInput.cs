@@ -19,8 +19,7 @@ namespace Bearded.UI.Controls
             get => isEnabled;
             set
             {
-                if (value == isEnabled)
-                    return;
+                if (value == isEnabled) return;
 
                 isEnabled = value;
                 if (!isEnabled && IsFocused)
@@ -37,8 +36,7 @@ namespace Bearded.UI.Controls
             set
             {
                 var newText = value ?? "";
-                if (text == newText)
-                    return;
+                if (text == newText) return;
                 text = newText;
                 ensureValidCursorPosition();
                 onTextChanged();

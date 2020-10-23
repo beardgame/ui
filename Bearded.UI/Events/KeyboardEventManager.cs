@@ -40,8 +40,7 @@ namespace Bearded.UI.Events
                         args,
                         (c, e) => c.PreviewKeyHit(e),
                         (c, e) => c.KeyHit(e));
-                    if (!args.Handled)
-                        eventsCapturer?.KeyHit(args);
+                    if (!args.Handled) eventsCapturer?.KeyHit(args);
                 }
                 else
                 {
@@ -49,8 +48,7 @@ namespace Bearded.UI.Events
                         args,
                         (c, e) => c.PreviewKeyReleased(e),
                         (c, e) => c.KeyReleased(e));
-                    if (!args.Handled)
-                        eventsCapturer?.KeyReleased(args);
+                    if (!args.Handled) eventsCapturer?.KeyReleased(args);
                 }
             }
 
