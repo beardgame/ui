@@ -95,11 +95,11 @@ namespace Bearded.UI.Controls
 
             if (offsetAfter > offsetBefore)
             {
-                onScrollDown();
+                onScrollDown(itemSource);
             }
             else if (offsetAfter < offsetBefore)
             {
-                onScrollUp();
+                onScrollUp(itemSource);
             }
 
             if (offsetAfter != offsetBefore)
@@ -110,33 +110,36 @@ namespace Bearded.UI.Controls
 
         public void ScrollToTop()
         {
+            if (itemSource == null)
+                throw new InvalidOperationException("The ItemSource is not set.");
+
             ScrollOffset = 0;
-            onScrollUp();
+            onScrollUp(itemSource);
         }
 
         public void ScrollToBottom()
         {
-            ScrollOffset = totalContentHeight;
-            onScrollDown();
-        }
-
-        private void onScrollUp()
-        {
-            addCellsUpwards();
-            removeCellsUpwards();
-        }
-
-        private void onScrollDown()
-        {
-            addCellsDownwards();
-            removeCellsDownwards();
-        }
-        
-        public void OnAppendItems(int addedCount)
-        {
             if (itemSource == null)
                 throw new InvalidOperationException("The ItemSource is not set.");
 
+            ScrollOffset = totalContentHeight;
+            onScrollDown(itemSource);
+        }
+
+        private void onScrollUp(IListItemSource itemSource)
+        {
+            addCellsUpwards(itemSource);
+            removeCellsUpwards(itemSource);
+        }
+
+        private void onScrollDown(IListItemSource itemSource)
+        {
+            addCellsDownwards(itemSource);
+            removeCellsDownwards(itemSource);
+        }
+        
+        public void OnAppendItems(int addedCount, IListItemSource itemSource)
+        {
             if (needsReload)
                 return;
 
@@ -153,8 +156,8 @@ namespace Bearded.UI.Controls
             if (CurrentlyStuckToBottom)
                 ScrollOffset = totalContentHeight;
 
-            addCellsDownwards();
-            removeCellsDownwards();
+            addCellsDownwards(itemSource);
+            removeCellsDownwards(itemSource);
         }
 
         public void OnInsertedRange(int index, int count)
@@ -205,9 +208,9 @@ namespace Bearded.UI.Controls
                     ScrollOffset = totalContentHeight;
 
                 validateScrollPosition();
-                addCellsDownwards();
-                removeCellsUpwards();
-                addCellsUpwards();
+                addCellsDownwards(itemSource);
+                removeCellsUpwards(itemSource);
+                addCellsUpwards(itemSource);
             }
         }
         
@@ -218,9 +221,9 @@ namespace Bearded.UI.Controls
 
             itemCount = itemSource.ItemCount;
 
-            ensureNoCells();
+            ensureNoCells(itemSource);
 
-            calculateTotalHeight();
+            calculateTotalHeight(itemSource);
 
             if (CurrentlyStuckToBottom)
                 ScrollOffset = totalContentHeight;
@@ -228,16 +231,13 @@ namespace Bearded.UI.Controls
             validateScrollPosition();
 
             if (CurrentlyStuckToBottom)
-                addCellsUpwards();
+                addCellsUpwards(itemSource);
             else
-                addCellsDownwards();
+                addCellsDownwards(itemSource);
         }
 
-        private void calculateTotalHeight()
+        private void calculateTotalHeight(IListItemSource itemSource)
         {
-            if (itemSource == null)
-                throw new InvalidOperationException("The ItemSource is not set.");
-
             totalContentHeight = Enumerable
                 .Range(0, itemCount)
                 .Sum(i => itemSource.HeightOfItemAt(i));
@@ -272,11 +272,8 @@ namespace Bearded.UI.Controls
             contentBottomLimit = contentTopLimit + listContainer.Frame.Size.Y;
         }
 
-        private void removeCellsUpwards()
+        private void removeCellsUpwards(IListItemSource itemSource)
         {
-            if (itemSource == null)
-                throw new InvalidOperationException("The ItemSource is not set.");
-
             while (cells.Count > 0)
             {
                 var lastCell = cells.Last.Value;
@@ -291,11 +288,8 @@ namespace Bearded.UI.Controls
             }
         }
 
-        private void removeCellsDownwards()
+        private void removeCellsDownwards(IListItemSource itemSource)
         {
-            if (itemSource == null)
-                throw new InvalidOperationException("The ItemSource is not set.");
-
             while (cells.Count > 0)
             {
                 var firstCell = cells.First.Value;
@@ -310,7 +304,7 @@ namespace Bearded.UI.Controls
             }
         }
 
-        private void addCellsUpwards()
+        private void addCellsUpwards(IListItemSource itemSource)
         {
             var firstCell = cells.Count == 0
                 ? (null, itemCount, totalContentHeight, 0)
@@ -321,11 +315,11 @@ namespace Bearded.UI.Controls
                 if (firstCell.Offset < contentTopLimit)
                     break;
 
-                firstCell = addCellAbove(firstCell.Index - 1, firstCell.Offset);
+                firstCell = addCellAbove(firstCell.Index - 1, firstCell.Offset, itemSource);
             }
         }
 
-        private void addCellsDownwards()
+        private void addCellsDownwards(IListItemSource itemSource)
         {
             var lastCell = cells.Count == 0
                 ? (null, -1, 0, 0)
@@ -338,20 +332,17 @@ namespace Bearded.UI.Controls
                 if (lastCellBottom > contentBottomLimit)
                     break;
 
-                lastCell = addCellBelow(lastCell.Index + 1, lastCellBottom);
+                lastCell = addCellBelow(lastCell.Index + 1, lastCellBottom, itemSource);
             }
         }
 
         private (Control? Control, int Index, double Offset, double Height)
-            addCellBelow(int index, double top)
+            addCellBelow(int index, double top, IListItemSource itemSource)
         {
-            if (itemSource == null)
-                throw new InvalidOperationException("The ItemSource is not set.");
-
             var height = itemSource.HeightOfItemAt(index);
             var bottom = top + height;
 
-            var cell = createCellIfVisible(index, bottom, top, height);
+            var cell = createCellIfVisible(index, bottom, top, height, itemSource);
 
             if (cell.Control != null)
                 cells.AddLast((cell.Control, cell.Index, cell.Offset, cell.Height));
@@ -360,15 +351,12 @@ namespace Bearded.UI.Controls
         }
 
         private (Control? Control, int Index, double Offset, double Height)
-            addCellAbove(int index, double bottom)
+            addCellAbove(int index, double bottom, IListItemSource itemSource)
         {
-            if (itemSource == null)
-                throw new InvalidOperationException("The ItemSource is not set.");
-
             var height = itemSource.HeightOfItemAt(index);
             var top = bottom - height;
 
-            var cell = createCellIfVisible(index, bottom, top, height);
+            var cell = createCellIfVisible(index, bottom, top, height, itemSource);
 
             if (cell.Control != null)
                 cells.AddFirst((cell.Control, cell.Index, cell.Offset, cell.Height));
@@ -377,20 +365,17 @@ namespace Bearded.UI.Controls
         }
 
         private (Control? Control, int Index, double Offset, double Height)
-            createCellIfVisible(int index, double bottom, double top, double height)
+            createCellIfVisible(int index, double bottom, double top, double height, IListItemSource itemSource)
         {
             var isVisible = bottom >= contentTopLimit && top <= contentBottomLimit;
             
             return isVisible
-                ? (createCellControl(index, top, bottom), index, top, height)
+                ? (createCellControl(index, top, bottom, itemSource), index, top, height)
                 : (null, index, top, height);
         }
 
-        private Control createCellControl(int index, double top, double bottom)
+        private Control createCellControl(int index, double top, double bottom, IListItemSource itemSource)
         {
-            if (itemSource == null)
-                throw new InvalidOperationException("The ItemSource is not set.");
-
             var control = itemSource.CreateItemControlFor(index);
 
             anchorCell(control, top, bottom);
@@ -412,17 +397,14 @@ namespace Bearded.UI.Controls
             return cell.Offset + cell.Height;
         }
 
-        private void ensureNoCells()
+        private void ensureNoCells(IListItemSource itemSource)
         {
             if (contentContainer.Children.Count > 0)
-                clearChildren();
+                clearChildren(itemSource);
         }
 
-        private void clearChildren()
+        private void clearChildren(IListItemSource itemSource)
         {
-            if (itemSource == null)
-                throw new InvalidOperationException("The ItemSource is not set.");
-
             foreach (var (control, index, _, _) in cells)
             {
                 itemSource.DestroyItemControlAt(index, control);
