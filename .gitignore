@@ -190,3 +190,6 @@ FakesAssemblies/
 
 # Vim swap files
 *.swp
+
+# Ignore the editor config file for now, until there is an official one.
+.editorconfig
