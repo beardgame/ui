@@ -22,12 +22,12 @@ namespace Bearded.UI.Controls
             base.MouseButtonReleased(eventArgs);
             if (eventArgs.MouseButton == MouseButton.Left && IsEnabled)
             {
-                FireClickEvent(new ClickEventArgs(eventArgs.ModifierKeys));
+                Click(new ClickEventArgs(eventArgs.ModifierKeys));
             }
             eventArgs.Handled = true;
         }
 
-        protected void FireClickEvent(ClickEventArgs eventArgs)
+        public void Click(ClickEventArgs eventArgs)
         {
             Clicked?.Invoke(eventArgs);
         }
