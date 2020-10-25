@@ -1,8 +1,8 @@
 ﻿using Bearded.UI.EventArgs;
 using Bearded.UI.Rendering;
 using Bearded.Utilities;
-using static OpenTK.Input.Key;
 using MouseButtonEventArgs = Bearded.UI.EventArgs.MouseButtonEventArgs;
+using static OpenToolkit.Windowing.Common.Input.Key;
 
 namespace Bearded.UI.Controls
 {
@@ -20,7 +20,7 @@ namespace Bearded.UI.Controls
             set
             {
                 if (value == isEnabled) return;
-                
+
                 isEnabled = value;
                 if (!isEnabled && IsFocused)
                 {
