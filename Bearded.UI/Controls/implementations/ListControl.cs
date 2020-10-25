@@ -70,10 +70,10 @@ namespace Bearded.UI.Controls
             }
         }
 
-        public static ListControl ClickThrough(
+        public static ListControl CreateClickThrough(
                 CompositeControl listContainer = null, bool startStuckToBottom = false) =>
             new ListControl(
-                listContainer ?? CompositeControl.ClickThrough(), CompositeControl.ClickThrough(), startStuckToBottom);
+                listContainer ?? CompositeControl.CreateClickThrough(), CompositeControl.CreateClickThrough(), startStuckToBottom);
 
         public ListControl(CompositeControl listContainer = null, bool startStuckToBottom = false)
             : this(listContainer ?? new CompositeControl(), new CompositeControl(), startStuckToBottom) {}

@@ -17,7 +17,7 @@ namespace Bearded.UI.Controls
             Children = children.AsReadOnly();
         }
 
-        public static CompositeControl ClickThrough() => new CompositeControl {IsClickThrough = true};
+        public static CompositeControl CreateClickThrough() => new CompositeControl {IsClickThrough = true};
 
         public void Add(Control child)
         {
