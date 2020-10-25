@@ -1,5 +1,4 @@
-﻿using System;
-using Bearded.UI.EventArgs;
+﻿using Bearded.UI.EventArgs;
 using Bearded.UI.Rendering;
 using Bearded.Utilities;
 using OpenTK.Input;
@@ -9,10 +8,7 @@ namespace Bearded.UI.Controls
 {
     public class Button : CompositeControl
     {
-        [Obsolete("Use #Triggered instead.")]
-        public event VoidEventHandler Clicked;
-
-        public event GenericEventHandler<TriggerEventArgs> Triggered;
+        public event GenericEventHandler<ClickEventArgs> Clicked;
 
         public bool IsEnabled { get; set; } = true;
 
@@ -26,24 +22,23 @@ namespace Bearded.UI.Controls
             base.MouseButtonReleased(eventArgs);
             if (eventArgs.MouseButton == MouseButton.Left && IsEnabled)
             {
-                Trigger(new TriggerEventArgs(eventArgs.ModifierKeys));
-                Clicked?.Invoke();
+                FireClickEvent(new ClickEventArgs(eventArgs.ModifierKeys));
             }
             eventArgs.Handled = true;
         }
 
-        protected void Trigger(TriggerEventArgs eventArgs)
+        protected void FireClickEvent(ClickEventArgs eventArgs)
         {
-            Triggered?.Invoke(eventArgs);
+            Clicked?.Invoke(eventArgs);
         }
 
         protected override void RenderStronglyTyped(IRendererRouter r) => r.Render(this);
 
-        public struct TriggerEventArgs
+        public readonly struct ClickEventArgs
         {
             public ModifierKeys ModifierKeys { get; }
 
-            public TriggerEventArgs(ModifierKeys modifierKeys)
+            public ClickEventArgs(ModifierKeys modifierKeys)
             {
                 ModifierKeys = modifierKeys;
             }
