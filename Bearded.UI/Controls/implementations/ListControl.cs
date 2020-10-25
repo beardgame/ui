@@ -9,7 +9,7 @@ namespace Bearded.UI.Controls
 {
     // TODO: fix scrolloffset - validateScolloffset recursion
     // TODO: extract scroll controls
-    // TODO: make scoll bar
+    // TODO: make scroll bar
     // TODO: allow insert/removal/update of ranges
     // TODO: refactor all control operations to only happen on frame updates to prevent crashes when calling methods early
 
@@ -70,14 +70,21 @@ namespace Bearded.UI.Controls
             }
         }
 
+        public static ListControl CreateClickThrough(
+                CompositeControl listContainer = null, bool startStuckToBottom = false) =>
+            new ListControl(
+                listContainer ?? CompositeControl.CreateClickThrough(), CompositeControl.CreateClickThrough(), startStuckToBottom);
+
         public ListControl(CompositeControl listContainer = null, bool startStuckToBottom = false)
+            : this(listContainer ?? new CompositeControl(), new CompositeControl(), startStuckToBottom) {}
+
+        private ListControl(CompositeControl listContainer, CompositeControl contentContainer, bool startStuckToBottom)
         {
             this.listContainer = listContainer ?? new CompositeControl();
             CurrentlyStuckToBottom = startStuckToBottom;
 
             Add(this.listContainer);
 
-            contentContainer = new CompositeControl();
             this.listContainer.Add(contentContainer);
         }
 
@@ -131,7 +138,7 @@ namespace Bearded.UI.Controls
             addCellsDownwards();
             removeCellsDownwards();
         }
-        
+
         public void OnAppendItems(int addedCount)
         {
             if (needsReload)
@@ -207,7 +214,7 @@ namespace Bearded.UI.Controls
                 addCellsUpwards();
             }
         }
-        
+
         public void Reload()
         {
             itemCount = itemSource.ItemCount;
@@ -268,10 +275,10 @@ namespace Bearded.UI.Controls
             while (cells.Count > 0)
             {
                 var lastCell = cells.Last.Value;
-                
+
                 if (lastCell.Offset < contentBottomLimit)
                     break;
-                
+
                 itemSource.DestroyItemControlAt(lastCell.Index, lastCell.Control);
 
                 contentContainer.Remove(lastCell.Control);
@@ -359,7 +366,7 @@ namespace Bearded.UI.Controls
             createCellIfVisible(int index, double bottom, double top, double height)
         {
             var isVisible = bottom >= contentTopLimit && top <= contentBottomLimit;
-            
+
             return isVisible
                 ? (createCellControl(index, top, bottom), index, top, height)
                 : (null, index, top, height);
