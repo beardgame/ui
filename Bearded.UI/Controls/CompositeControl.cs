@@ -1,16 +1,21 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Bearded.UI.Rendering;
+using Bearded.Utilities;
 
 namespace Bearded.UI.Controls
 {
-    public class CompositeControl : Control, IControlParent, IEnumerable<Control>
+    public class CompositeControl : Control, IControlParent, IFocusParent, IEnumerable<Control>
     {
         private readonly List<Control> children = new List<Control>();
 
         public ReadOnlyCollection<Control> Children { get; }
+
+        public bool HasFocusedDescendant => FocusState == FocusState.DescendantFocused;
+        private Maybe<Control> focusedDescendant = Maybe.Nothing;
 
         public CompositeControl()
         {
@@ -48,7 +53,43 @@ namespace Bearded.UI.Controls
             }
         }
 
-        public bool FocusDescendant(Control control) => Parent.FocusDescendant(control);
+        bool IFocusParent.PropagateFocus(Control control)
+        {
+            var isChildFocused = FocusParent.PropagateFocus(control);
+            if (!isChildFocused)
+            {
+                return false;
+            }
+
+            focusedDescendant = Maybe.Just(control);
+            FocusState = FocusState.DescendantFocused;
+            return true;
+        }
+
+        public override void Blur()
+        {
+            switch (FocusState)
+            {
+                case FocusState.None:
+                    break;
+                case FocusState.DescendantFocused:
+                    focusedDescendant.Match(control => control.Blur());
+                    break;
+                case FocusState.Focused:
+                    base.Blur();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        void IFocusParent.PropagateBlur()
+        {
+            FocusState = FocusState.None;
+            focusedDescendant = Maybe.Nothing;
+
+            (Parent as IFocusParent)?.PropagateBlur();
+        }
 
         public override void SetFrameNeedsUpdate()
         {

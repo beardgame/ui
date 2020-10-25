@@ -7,7 +7,7 @@
 
         public static AnchorTemplate Default
             => new AnchorTemplate(Anchors.Default, Anchors.Default);
-            
+
         public AnchorTemplate(Control control)
             : this(control.HorizontalAnchors, control.VerticalAnchors)
         {
@@ -18,7 +18,7 @@
             horizontalAnchors = horizontal;
             verticalAnchors = vertical;
         }
-            
+
         public void ApplyTo(Control control)
         {
             control.SetAnchors(horizontalAnchors.H, verticalAnchors.V);

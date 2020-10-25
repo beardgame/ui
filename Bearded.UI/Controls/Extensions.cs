@@ -24,7 +24,7 @@ namespace Bearded.UI.Controls
         {
             return parent.Children.OfType<T>().FirstOrDefault();
         }
-        
+
         public static bool IsDescendantOf(this Control control, IControlParent parent)
         {
             return control.Parent == parent

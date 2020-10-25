@@ -24,7 +24,7 @@ namespace Bearded.UI.Controls
                 isEnabled = value;
                 if (!isEnabled && IsFocused)
                 {
-                    Unfocus();
+                    Blur();
                 }
                 CanBeFocused = isEnabled;
             }
@@ -105,7 +105,7 @@ namespace Bearded.UI.Controls
             InsertTextAtCursor(eventArgs.Character.ToString());
             eventArgs.Handled = true;
         }
-        
+
         public void MoveCursorToEnd()
         {
             cursorPosition = text.Length;

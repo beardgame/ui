@@ -5,7 +5,7 @@ using OpenToolkit.Mathematics;
 
 namespace Bearded.UI.Controls
 {
-    public class RootControl : IControlParent
+    public class RootControl : IControlParent, IFocusParent
     {
         private readonly CompositeControl controls;
 
@@ -48,20 +48,31 @@ namespace Bearded.UI.Controls
                 controls.Render(r);
             }
         }
-        
+
         public ReadOnlyCollection<Control> Children => controls.Children;
+        public bool HasFocusedDescendant => FocusManager.FocusedControl.Select(_ => true).ValueOrDefault(false);
         public void Add(Control child) => controls.Add(child);
         public void AddOnTopOf(Control reference, Control child) => controls.AddOnTopOf(reference, child);
         public void Remove(Control child) => controls.Remove(child);
 
-        public bool FocusDescendant(Control control)
+        bool IFocusParent.PropagateFocus(Control control)
         {
             if (!control.IsDescendantOf(this))
                 throw new InvalidOperationException("Can only focus descendant.");
-            
+
             FocusManager.Focus(control);
 
             return true;
+        }
+
+        void IFocusParent.PropagateBlur()
+        {
+            FocusManager.BlurCurrentFocus();
+        }
+
+        public void Blur()
+        {
+            FocusManager.FocusedControl.Match(control => control.Blur());
         }
     }
 }

@@ -9,6 +9,8 @@ namespace Bearded.UI.Controls
     {
         public IControlParent Parent { get; private set; }
 
+        internal IFocusParent FocusParent => (IFocusParent) Parent;
+
         private Frame frame;
         private bool frameNeedsUpdate = true;
 
@@ -33,28 +35,22 @@ namespace Bearded.UI.Controls
                 else
                 {
                     MadeInvisible();
-                    if (IsFocused) Unfocus();
+                    if (IsFocused) Blur();
                 }
             }
         }
 
         public bool IsClickThrough { get; protected set; }
 
-        public bool IsFocused { get; private set; }
+        internal FocusState FocusState = FocusState.None;
+
+        public bool IsFocused => FocusState == FocusState.Focused;
         public bool CanBeFocused { get; protected set; }
 
         public void Focus()
         {
             if (!TryFocus())
                 throw new InvalidOperationException("Could not focus control.");
-        }
-
-        public void Unfocus()
-        {
-            if (IsFocused)
-                LostFocus();
-
-            IsFocused = false;
         }
 
         public virtual bool TryFocus()
@@ -64,12 +60,25 @@ namespace Bearded.UI.Controls
             if (IsFocused)
                 return true;
 
-            IsFocused = Parent.FocusDescendant(this);
-
-            if (IsFocused)
+            if (FocusParent.PropagateFocus(this))
+            {
+                FocusState = FocusState.Focused;
                 Focused();
+            }
 
             return IsFocused;
+        }
+
+        public virtual void Blur()
+        {
+            if (!IsFocused)
+                return;
+
+            FocusParent.PropagateBlur();
+            if (IsFocused)
+                LostFocus();
+
+            FocusState = FocusState.None;
         }
 
         public void SetAnchors(HorizontalAnchors horizontal, VerticalAnchors vertical)
@@ -133,6 +142,7 @@ namespace Bearded.UI.Controls
             if (parent != Parent)
                 throw new InvalidOperationException();
 
+            Blur();
             OnRemovingFromParent();
 
             Parent = null;

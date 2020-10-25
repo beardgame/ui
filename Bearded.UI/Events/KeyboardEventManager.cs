@@ -24,9 +24,9 @@ namespace Bearded.UI.Events
         {
             var focusedControl = root.FocusManager.FocusedControl;
 
-            var path = focusedControl == null
-                ? EventPropagationPath.Empty
-                : EventRouter.FindPropagationPath(root, focusedControl);
+            var path = focusedControl
+                .Select(control => EventRouter.FindPropagationPath(root, control))
+                .ValueOrDefault(EventPropagationPath.Empty);
 
             var modifierKeys = ModifierKeys.FromInputManager(inputManager);
 
