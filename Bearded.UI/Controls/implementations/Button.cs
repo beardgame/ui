@@ -8,7 +8,7 @@ namespace Bearded.UI.Controls
 {
     public class Button : CompositeControl
     {
-        public event GenericEventHandler<ClickEventArgs> Clicked;
+        public event GenericEventHandler<ClickEventArgs>? Clicked;
 
         public bool IsEnabled { get; set; } = true;
 

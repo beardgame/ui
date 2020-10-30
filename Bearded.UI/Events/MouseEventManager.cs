@@ -18,7 +18,7 @@ namespace Bearded.UI.Events
         private readonly RootControl root;
         private readonly InputManager inputManager;
 
-        private EventPropagationPath previousPropagationPath;
+        private EventPropagationPath? previousPropagationPath;
 
         internal MouseEventManager(RootControl root, InputManager inputManager)
         {

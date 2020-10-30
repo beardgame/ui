@@ -8,12 +8,12 @@ namespace Bearded.UI.Events
     {
         private readonly RootControl root;
         private readonly InputManager inputManager;
-        private readonly IKeyboardEventsCapturer eventsCapturer;
+        private readonly IKeyboardEventsCapturer? eventsCapturer;
 
         internal KeyboardEventManager(
             RootControl root,
             InputManager inputManager,
-            IKeyboardEventsCapturer eventsCapturer)
+            IKeyboardEventsCapturer? eventsCapturer)
         {
             this.root = root;
             this.inputManager = inputManager;
