@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
 using Bearded.Utilities.Input;
 using OpenTK.Input;
 
@@ -9,123 +6,69 @@ namespace Bearded.UI.EventArgs
 {
     public readonly struct ModifierKeys : IEquatable<ModifierKeys>
     {
-        [Flags]
-        private enum ModifierKeysFlags
+        public bool Shift { get; }
+        public bool Control { get; }
+        public bool Alt { get; }
+        public bool Win { get; }
+
+        private ModifierKeys(bool shift, bool control, bool alt, bool win)
         {
-            None = 0,
-            LShift = 1,
-            RShift = 1 << 1,
-            LControl = 1 << 2,
-            RControl = 1 << 3,
-            LAlt = 1 << 4,
-            RAlt = 1 << 5,
-            LWin = 1 << 6,
-            RWin = 1 << 7,
-
-            Shift = LShift | RShift,
-            Control = LControl | RControl,
-            Alt = LAlt | RAlt,
-            Win = LWin | RWin,
-        }
-
-        private static readonly ImmutableDictionary<ModifierKeysFlags, Key> flagToOpenTKKey =
-            ImmutableDictionary.CreateRange(
-                new Dictionary<ModifierKeysFlags, Key>
-                {
-                    {ModifierKeysFlags.LShift, Key.LShift},
-                    {ModifierKeysFlags.RShift, Key.RShift},
-                    {ModifierKeysFlags.LControl, Key.LControl},
-                    {ModifierKeysFlags.RControl, Key.RControl},
-                    {ModifierKeysFlags.LAlt, Key.LAlt},
-                    {ModifierKeysFlags.RAlt, Key.RAlt},
-                    {ModifierKeysFlags.LWin, Key.LWin},
-                    {ModifierKeysFlags.RWin, Key.RWin}
-                });
-
-        private readonly ModifierKeysFlags pressedKeys;
-
-        public bool Shift => (pressedKeys & ModifierKeysFlags.Shift) != ModifierKeysFlags.None;
-        public bool Control => (pressedKeys & ModifierKeysFlags.Control) != ModifierKeysFlags.None;
-        public bool Alt => (pressedKeys & ModifierKeysFlags.Alt) != ModifierKeysFlags.None;
-        public bool Win => (pressedKeys & ModifierKeysFlags.Win) != ModifierKeysFlags.None;
-
-        private ModifierKeys(ModifierKeysFlags pressedKeys)
-        {
-            this.pressedKeys = pressedKeys;
+            Shift = shift;
+            Control = control;
+            Alt = alt;
+            Win = win;
         }
 
         public static ModifierKeys None { get; } = GetBuilder().Build();
 
         public static ModifierKeys FromInputManager(InputManager inputManager)
         {
-            return new ModifierKeys(flagToOpenTKKey
-                .Where(pair => inputManager.IsKeyPressed(pair.Value))
-                .Select(pair => pair.Key)
-                .Aggregate(ModifierKeysFlags.None, (m1, m2) => m1 | m2));
+            return new ModifierKeys(
+                inputManager.IsKeyPressed(Key.LShift) || inputManager.IsKeyPressed(Key.RShift),
+                inputManager.IsKeyPressed(Key.LControl) || inputManager.IsKeyPressed(Key.RControl),
+                inputManager.IsKeyPressed(Key.LAlt) || inputManager.IsKeyPressed(Key.RAlt),
+                inputManager.IsKeyPressed(Key.LWin) || inputManager.IsKeyPressed(Key.RWin));
         }
 
         public static Builder GetBuilder() => new Builder();
 
         public sealed class Builder
         {
-            private ModifierKeysFlags pressedKeys;
+            private bool shift;
+            private bool control;
+            private bool alt;
+            private bool win;
 
             internal Builder() {}
 
-            public Builder IncludeLShift()
+            public Builder IncludeShift()
             {
-                pressedKeys |= ModifierKeysFlags.LShift;
+                shift = true;
                 return this;
             }
 
-            public Builder IncludeRShift()
+            public Builder IncludeControl()
             {
-                pressedKeys |= ModifierKeysFlags.RShift;
+                control = true;
                 return this;
             }
 
-            public Builder IncludeLControl()
+            public Builder IncludeAlt()
             {
-                pressedKeys |= ModifierKeysFlags.LControl;
+                alt = true;
                 return this;
             }
 
-            public Builder IncludeRControl()
+            public Builder IncludeWin()
             {
-                pressedKeys |= ModifierKeysFlags.RControl;
+                win = true;
                 return this;
             }
 
-            public Builder IncludeLAlt()
-            {
-                pressedKeys |= ModifierKeysFlags.LAlt;
-                return this;
-            }
-
-            public Builder IncludeRAlt()
-            {
-                pressedKeys |= ModifierKeysFlags.RAlt;
-                return this;
-            }
-
-            public Builder IncludeLWin()
-            {
-                pressedKeys |= ModifierKeysFlags.LWin;
-                return this;
-            }
-
-            public Builder IncludeRWin()
-            {
-                pressedKeys |= ModifierKeysFlags.RWin;
-                return this;
-            }
-
-            public ModifierKeys Build() => new ModifierKeys(pressedKeys);
+            public ModifierKeys Build() => new ModifierKeys(shift, control, alt, win);
         }
 
-        public bool IsStrictSupersetOf(ModifierKeys other) => (pressedKeys & other.pressedKeys) == other.pressedKeys;
-
-        public bool IsSupersetOfIgnoringLeftRight(ModifierKeys other) =>
+        public bool IsSupersetOf(ModifierKeys other) =>
             (Shift && other.Shift) == other.Shift &&
             (Control && other.Control) == other.Control &&
             (Alt && other.Alt) == other.Alt &&
