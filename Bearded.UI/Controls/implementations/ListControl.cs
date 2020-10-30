@@ -80,6 +80,7 @@ namespace Bearded.UI.Controls
 
         private ListControl(CompositeControl listContainer, CompositeControl contentContainer, bool startStuckToBottom)
         {
+            this.contentContainer = contentContainer;
             this.listContainer = listContainer ?? new CompositeControl();
             CurrentlyStuckToBottom = startStuckToBottom;
 
@@ -145,8 +146,11 @@ namespace Bearded.UI.Controls
             removeCellsDownwards(itemSource);
         }
 
-        public void OnAppendItems(int addedCount, IListItemSource itemSource)
+        public void OnAppendItems(int addedCount)
         {
+            if (itemSource == null)
+                throw new InvalidOperationException("The ItemSource is not set.");
+
             if (needsReload)
                 return;
 
