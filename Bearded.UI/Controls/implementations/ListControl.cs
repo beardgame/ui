@@ -287,7 +287,7 @@ namespace Bearded.UI.Controls
         {
             while (cells.Count > 0)
             {
-                var lastCell = cells.Last.Value;
+                var lastCell = cells.Last!.Value;
 
                 if (lastCell.Offset < contentBottomLimit)
                     break;
@@ -303,7 +303,7 @@ namespace Bearded.UI.Controls
         {
             while (cells.Count > 0)
             {
-                var firstCell = cells.First.Value;
+                var firstCell = cells.First!.Value;
 
                 if (bottomOf(firstCell) > contentTopLimit)
                     break;
@@ -319,7 +319,7 @@ namespace Bearded.UI.Controls
         {
             var firstCell = cells.Count == 0
                 ? (null, itemCount, totalContentHeight, 0)
-                : cells.First.Value;
+                : cells.First!.Value;
 
             while (firstCell.Index > 0)
             {
@@ -334,7 +334,7 @@ namespace Bearded.UI.Controls
         {
             var lastCell = cells.Count == 0
                 ? (null, -1, 0, 0)
-                : cells.Last.Value;
+                : cells.Last!.Value;
 
             while (lastCell.Index + 1 < itemCount)
             {
