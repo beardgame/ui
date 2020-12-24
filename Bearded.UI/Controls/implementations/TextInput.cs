@@ -2,7 +2,7 @@
 using Bearded.UI.Rendering;
 using Bearded.Utilities;
 using MouseButtonEventArgs = Bearded.UI.EventArgs.MouseButtonEventArgs;
-using static OpenToolkit.Windowing.Common.Input.Key;
+using static OpenTK.Windowing.GraphicsLibraryFramework.Keys;
 
 namespace Bearded.UI.Controls
 {
@@ -80,7 +80,7 @@ namespace Bearded.UI.Controls
                     cursorPosition++;
                     ensureValidCursorPosition();
                     break;
-                case BackSpace:
+                case Backspace:
                     RemoveCharacterBeforeCursorIfPossible();
                     break;
                 case Delete:

@@ -20,11 +20,11 @@ namespace Bearded.UI.Controls
             return control;
         }
 
-        public static T FirstChildOfType<T>(this IControlParent parent)
+        public static T? FirstChildOfType<T>(this IControlParent parent) where T : class
         {
             return parent.Children.OfType<T>().FirstOrDefault();
         }
-        
+
         public static bool IsDescendantOf(this Control control, IControlParent parent)
         {
             return control.Parent == parent

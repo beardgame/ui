@@ -1,7 +1,7 @@
 ﻿using Bearded.UI.EventArgs;
 using Bearded.UI.Rendering;
 using Bearded.Utilities;
-using OpenToolkit.Windowing.Common.Input;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using MouseButtonEventArgs = Bearded.UI.EventArgs.MouseButtonEventArgs;
 
 namespace Bearded.UI.Controls
