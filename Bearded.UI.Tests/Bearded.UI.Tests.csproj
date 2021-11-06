@@ -1,7 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>Bearded.UI.Tests</RootNamespace>
-    <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin/Debug/</OutputPath>
@@ -13,7 +16,7 @@
     <ProjectReference Include="..\Bearded.UI\Bearded.UI.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="5.9.0" />
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="xunit" Version="2.4.1" />
   </ItemGroup>
 </Project>

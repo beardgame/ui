@@ -1,14 +1,14 @@
 ﻿using Bearded.UI.EventArgs;
 using Bearded.UI.Rendering;
 using Bearded.Utilities;
-using static OpenTK.Input.Key;
 using MouseButtonEventArgs = Bearded.UI.EventArgs.MouseButtonEventArgs;
+using static OpenTK.Windowing.GraphicsLibraryFramework.Keys;
 
 namespace Bearded.UI.Controls
 {
     public class TextInput : Control
     {
-        public event VoidEventHandler TextChanged;
+        public event VoidEventHandler? TextChanged;
 
         private bool isEnabled;
         private string text = "";
@@ -20,7 +20,7 @@ namespace Bearded.UI.Controls
             set
             {
                 if (value == isEnabled) return;
-                
+
                 isEnabled = value;
                 if (!isEnabled && IsFocused)
                 {
@@ -36,8 +36,7 @@ namespace Bearded.UI.Controls
             set
             {
                 var newText = value ?? "";
-                if (text == newText)
-                    return;
+                if (text == newText) return;
                 text = newText;
                 ensureValidCursorPosition();
                 onTextChanged();
@@ -81,7 +80,7 @@ namespace Bearded.UI.Controls
                     cursorPosition++;
                     ensureValidCursorPosition();
                     break;
-                case BackSpace:
+                case Backspace:
                     RemoveCharacterBeforeCursorIfPossible();
                     break;
                 case Delete:
@@ -101,7 +100,8 @@ namespace Bearded.UI.Controls
 
         public override void CharacterTyped(CharEventArgs eventArgs)
         {
-            if (!isEnabled) return;
+            if (!isEnabled)
+                return;
             InsertTextAtCursor(eventArgs.Character.ToString());
             eventArgs.Handled = true;
         }

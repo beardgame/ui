@@ -1,5 +1,5 @@
-﻿using OpenTK;
-using OpenTK.Input;
+﻿using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Bearded.UI.EventArgs
 {

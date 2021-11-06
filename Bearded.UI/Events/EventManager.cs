@@ -15,7 +15,7 @@ namespace Bearded.UI.Events
         public EventManager(
             RootControl root,
             InputManager inputManager,
-            IKeyboardEventsCapturer keyboardEventsCapturer)
+            IKeyboardEventsCapturer? keyboardEventsCapturer)
         {
             mouseEvents = new MouseEventManager(root, inputManager);
             keyboardEvents = new KeyboardEventManager(root, inputManager, keyboardEventsCapturer);

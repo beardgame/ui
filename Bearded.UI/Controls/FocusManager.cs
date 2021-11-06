@@ -2,9 +2,9 @@
 {
     public class FocusManager
     {
-        private Control currentFocus;
+        private Control? currentFocus;
 
-        public Control FocusedControl
+        public Control? FocusedControl
         {
             get
             {

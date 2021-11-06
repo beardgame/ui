@@ -1,6 +1,7 @@
 using System;
 using Bearded.Utilities.Input;
-using OpenTK.Input;
+using OpenTK.Windowing.Common.Input;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Bearded.UI.EventArgs
 {
@@ -24,10 +25,10 @@ namespace Bearded.UI.EventArgs
         public static ModifierKeys FromInputManager(InputManager inputManager)
         {
             return new ModifierKeys(
-                inputManager.IsKeyPressed(Key.LShift) || inputManager.IsKeyPressed(Key.RShift),
-                inputManager.IsKeyPressed(Key.LControl) || inputManager.IsKeyPressed(Key.RControl),
-                inputManager.IsKeyPressed(Key.LAlt) || inputManager.IsKeyPressed(Key.RAlt),
-                inputManager.IsKeyPressed(Key.LWin) || inputManager.IsKeyPressed(Key.RWin));
+                inputManager.IsKeyPressed(Keys.LeftShift) || inputManager.IsKeyPressed(Keys.RightShift),
+                inputManager.IsKeyPressed(Keys.LeftControl) || inputManager.IsKeyPressed(Keys.RightControl),
+                inputManager.IsKeyPressed(Keys.LeftAlt) || inputManager.IsKeyPressed(Keys.RightAlt),
+                inputManager.IsKeyPressed(Keys.LeftSuper) || inputManager.IsKeyPressed(Keys.RightSuper));
         }
 
         public static Builder GetBuilder() => new Builder();
