@@ -9,7 +9,10 @@
     <RepositoryType>Git</RepositoryType>
     <PackageTags>ui,game,gamedev</PackageTags>
     <PackageVersion>0.0.0</PackageVersion>
-    <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
+    <LangVersion>8.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin/Debug/</OutputPath>
@@ -18,8 +21,9 @@
     <OutputPath>bin/Release/</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Bearded.Utilities" Version="0.2.0.282-dev" />
-    <PackageReference Include="OpenTK" Version="2.0.0" />
+    <PackageReference Include="Bearded.Utilities" Version="0.2.0.393-dev" />
+    <PackageReference Include="OpenTK.Mathematics" Version="4.4.0" />
+    <PackageReference Include="OpenTK.Windowing.Common" Version="4.4.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 </Project>

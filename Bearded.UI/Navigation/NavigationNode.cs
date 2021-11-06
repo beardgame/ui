@@ -7,7 +7,7 @@
 
     public abstract class NavigationNode<T> : INavigationNode
     {
-        protected NavigationController Navigation { get; private set; }
+        protected NavigationController? Navigation { get; private set; }
 
         internal void Initialize(NavigationContext<T> context)
         {

@@ -1,8 +1,8 @@
 ﻿using Bearded.UI.Controls;
 using Bearded.UI.EventArgs;
 using Bearded.Utilities.Input;
-using OpenTK;
-using OpenTK.Input;
+using OpenTK.Mathematics;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 using MouseButtonEventArgs = Bearded.UI.EventArgs.MouseButtonEventArgs;
 using MouseEventArgs = Bearded.UI.EventArgs.MouseEventArgs;
 
@@ -18,7 +18,7 @@ namespace Bearded.UI.Events
         private readonly RootControl root;
         private readonly InputManager inputManager;
 
-        private EventPropagationPath previousPropagationPath;
+        private EventPropagationPath? previousPropagationPath;
 
         internal MouseEventManager(RootControl root, InputManager inputManager)
         {
