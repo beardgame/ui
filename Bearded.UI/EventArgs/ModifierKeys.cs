@@ -1,6 +1,5 @@
 using System;
 using Bearded.Utilities.Input;
-using OpenTK.Windowing.Common.Input;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Bearded.UI.EventArgs
@@ -20,7 +19,7 @@ namespace Bearded.UI.EventArgs
             Win = win;
         }
 
-        public static ModifierKeys None { get; } = GetBuilder().Build();
+        public static ModifierKeys None { get; } = new ModifierKeys();
 
         public static ModifierKeys FromInputManager(InputManager inputManager)
         {
@@ -31,43 +30,13 @@ namespace Bearded.UI.EventArgs
                 inputManager.IsKeyPressed(Keys.LeftSuper) || inputManager.IsKeyPressed(Keys.RightSuper));
         }
 
-        public static Builder GetBuilder() => new Builder();
+        public ModifierKeys WithShift() => new ModifierKeys(true, Control, Alt, Win);
 
-        public sealed class Builder
-        {
-            private bool shift;
-            private bool control;
-            private bool alt;
-            private bool win;
+        public ModifierKeys WithControl() => new ModifierKeys(Shift, true, Alt, Win);
 
-            internal Builder() {}
+        public ModifierKeys WithAlt() => new ModifierKeys(Shift, Control, true, Win);
 
-            public Builder IncludeShift()
-            {
-                shift = true;
-                return this;
-            }
-
-            public Builder IncludeControl()
-            {
-                control = true;
-                return this;
-            }
-
-            public Builder IncludeAlt()
-            {
-                alt = true;
-                return this;
-            }
-
-            public Builder IncludeWin()
-            {
-                win = true;
-                return this;
-            }
-
-            public ModifierKeys Build() => new ModifierKeys(shift, control, alt, win);
-        }
+        public ModifierKeys WithWin() => new ModifierKeys(Shift, Control, Alt, true);
 
         public bool IsSupersetOf(ModifierKeys other) =>
             (Shift && other.Shift) == other.Shift &&
@@ -78,19 +47,9 @@ namespace Bearded.UI.EventArgs
         public bool Equals(ModifierKeys other) =>
             Shift == other.Shift && Control == other.Control && Alt == other.Alt && Win == other.Win;
 
-        public override bool Equals(object obj) => obj is ModifierKeys other && Equals(other);
+        public override bool Equals(object? obj) => obj is ModifierKeys other && Equals(other);
 
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = Shift.GetHashCode();
-                hashCode = (hashCode * 397) ^ Control.GetHashCode();
-                hashCode = (hashCode * 397) ^ Alt.GetHashCode();
-                hashCode = (hashCode * 397) ^ Win.GetHashCode();
-                return hashCode;
-            }
-        }
+        public override int GetHashCode() => HashCode.Combine(Shift, Control, Alt, Win);
 
         public static bool operator ==(ModifierKeys left, ModifierKeys right) => Equals(left, right);
 
