@@ -1,7 +1,6 @@
 using System;
 using Bearded.UI.Controls;
 using Bearded.UI.Rendering;
-using Bearded.Utilities.Testing;
 using FluentAssertions;
 using Xunit;
 
@@ -9,7 +8,7 @@ namespace Bearded.UI.Tests.Controls
 {
     public static class FocusTests
     {
-        public class InitialState
+        public sealed class InitialState
         {
             [Fact]
             public void IsFocusedIsFalse()
@@ -32,13 +31,13 @@ namespace Bearded.UI.Tests.Controls
             {
                 var (root, _) = rootWithFocusableChild();
 
-                root.FocusManager.FocusedControl.Should().BeNothing();
+                root.FocusManager.FocusedControl.Should().BeNull();
             }
         }
 
         public static class Focus
         {
-            public class OnUnfocusedControlWithoutExistingFocusedControl
+            public sealed class OnUnfocusedControlWithoutExistingFocusedControl
             {
                 [Fact]
                 public void SetsIsFocusedTrue()
@@ -57,7 +56,7 @@ namespace Bearded.UI.Tests.Controls
 
                     child.Focus();
 
-                    root.FocusManager.FocusedControl.Should().BeJust(child);
+                    root.FocusManager.FocusedControl.Should().Be(child);
                 }
 
                 [Fact]
@@ -101,7 +100,7 @@ namespace Bearded.UI.Tests.Controls
                 }
             }
 
-            public class OnUnfocusedControlWithExistingFocusedControl
+            public sealed class OnUnfocusedControlWithExistingFocusedControl
             {
                 [Fact]
                 public void SetsIsFocusedTrue()
@@ -144,7 +143,7 @@ namespace Bearded.UI.Tests.Controls
 
                     child2.Focus();
 
-                    root.FocusManager.FocusedControl.Should().BeJust(child2);
+                    root.FocusManager.FocusedControl.Should().Be(child2);
                 }
 
                 [Fact]
@@ -192,7 +191,7 @@ namespace Bearded.UI.Tests.Controls
                 }
             }
 
-            public class OnFocusedControl
+            public sealed class OnFocusedControl
             {
                 [Fact]
                 public void DoesNotCallFocusedMethod()
@@ -207,7 +206,7 @@ namespace Bearded.UI.Tests.Controls
                 }
             }
 
-            public class OnIntermediateControlWithNoFocusedControl
+            public sealed class OnIntermediateControlWithNoFocusedControl
             {
                 [Fact]
                 public void SetsIsFocusedTrue()
@@ -250,7 +249,7 @@ namespace Bearded.UI.Tests.Controls
                 }
             }
 
-            public class OnIntermediateControlWithFocusedChild
+            public sealed class OnIntermediateControlWithFocusedChild
             {
                 [Fact]
                 public void SetsIsFocusedTrue()
@@ -308,7 +307,7 @@ namespace Bearded.UI.Tests.Controls
                 }
             }
 
-            public class OnControlWithFocusedParent
+            public sealed class OnControlWithFocusedParent
             {
                 [Fact]
                 public void SetsIsFocusedTrue()
@@ -369,7 +368,7 @@ namespace Bearded.UI.Tests.Controls
 
         public static class Blur
         {
-            public class OnFocusedControl
+            public sealed class OnFocusedControl
             {
                 [Fact]
                 public void SetsIsFocusedFalse()
@@ -390,7 +389,7 @@ namespace Bearded.UI.Tests.Controls
 
                     child.Blur();
 
-                    root.FocusManager.FocusedControl.Should().BeNothing();
+                    root.FocusManager.FocusedControl.Should().BeNull();
                 }
 
                 [Fact]
@@ -427,7 +426,7 @@ namespace Bearded.UI.Tests.Controls
                 }
             }
 
-            public class OnUnfocusedControl
+            public sealed class OnUnfocusedControl
             {
                 [Fact]
                 public void DoesNotCallLostFocusMethod()
@@ -440,7 +439,7 @@ namespace Bearded.UI.Tests.Controls
                 }
             }
 
-            public class OnParentOfFocusedControl
+            public sealed class OnParentOfFocusedControl
             {
                 [Fact]
                 public void SetsIsFocusedFalseOnPreviouslyFocusedControl()
@@ -461,7 +460,7 @@ namespace Bearded.UI.Tests.Controls
 
                     intermediate.Blur();
 
-                    root.FocusManager.FocusedControl.Should().BeNothing();
+                    root.FocusManager.FocusedControl.Should().BeNull();
                 }
 
                 [Fact]
@@ -501,7 +500,7 @@ namespace Bearded.UI.Tests.Controls
 
         public static class RemoveFromParent
         {
-            public class OnFocusedControl
+            public sealed class OnFocusedControl
             {
                 [Fact]
                 public void SetsIsFocusedFalse()
@@ -555,11 +554,11 @@ namespace Bearded.UI.Tests.Controls
 
                     child.RemoveFromParent();
 
-                    root.FocusManager.FocusedControl.Should().BeNothing();
+                    root.FocusManager.FocusedControl.Should().BeNull();
                 }
             }
 
-            public class OnParentOfFocusedControl
+            public sealed class OnParentOfFocusedControl
             {
                 [Fact]
                 public void SetsIsFocusedFalseOnChild()
@@ -613,7 +612,7 @@ namespace Bearded.UI.Tests.Controls
 
                     intermediate.RemoveFromParent();
 
-                    root.FocusManager.FocusedControl.Should().BeNothing();
+                    root.FocusManager.FocusedControl.Should().BeNull();
                 }
             }
         }
@@ -702,7 +701,7 @@ namespace Bearded.UI.Tests.Controls
             return (root, child);
         }
 
-        private class TestCompositeControl : CompositeControl
+        private sealed class TestCompositeControl : CompositeControl
         {
             internal bool FocusedMethodCalled;
             internal bool LostFocusMethodCalled;
@@ -725,7 +724,7 @@ namespace Bearded.UI.Tests.Controls
             }
         }
 
-        private class FocusableTestControl : TestControl
+        private sealed class FocusableTestControl : TestControl
         {
             internal FocusableTestControl()
             {
@@ -733,7 +732,7 @@ namespace Bearded.UI.Tests.Controls
             }
         }
 
-        private class NonFocusableTestControl : TestControl
+        private sealed class NonFocusableTestControl : TestControl
         {
             internal NonFocusableTestControl()
             {
