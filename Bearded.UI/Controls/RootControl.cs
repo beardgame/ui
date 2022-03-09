@@ -5,7 +5,7 @@ using OpenTK.Mathematics;
 
 namespace Bearded.UI.Controls
 {
-    public class RootControl : IControlParent
+    public sealed class RootControl : IControlParent
     {
         private readonly CompositeControl controls;
 
@@ -48,7 +48,7 @@ namespace Bearded.UI.Controls
                 controls.Render(r);
             }
         }
-        
+
         public ReadOnlyCollection<Control> Children => controls.Children;
         public void Add(Control child) => controls.Add(child);
         public void AddOnTopOf(Control reference, Control child) => controls.AddOnTopOf(reference, child);
@@ -58,7 +58,7 @@ namespace Bearded.UI.Controls
         {
             if (!control.IsDescendantOf(this))
                 throw new InvalidOperationException("Can only focus descendant.");
-            
+
             FocusManager.Focus(control);
 
             return true;

@@ -1,6 +1,6 @@
 ﻿namespace Bearded.UI.Controls
 {
-    public class FocusManager
+    public sealed class FocusManager
     {
         private Control? currentFocus;
 

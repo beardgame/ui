@@ -2,7 +2,7 @@
 
 namespace Bearded.UI.EventArgs
 {
-    public class KeyEventArgs : RoutedEventArgs
+    public sealed class KeyEventArgs : RoutedEventArgs
     {
         public Keys Key { get; }
         public ModifierKeys ModifierKeys { get; }
