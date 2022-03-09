@@ -9,8 +9,8 @@
     <RepositoryType>Git</RepositoryType>
     <PackageTags>ui,game,gamedev</PackageTags>
     <PackageVersion>0.0.0</PackageVersion>
-    <TargetFrameworks>net5.0;netcoreapp3.1</TargetFrameworks>
-    <LangVersion>8.0</LangVersion>
+    <TargetFrameworks>net5.0;net6.0;netcoreapp3.1</TargetFrameworks>
+    <LangVersion>10</LangVersion>
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
   </PropertyGroup>
