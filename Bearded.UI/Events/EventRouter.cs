@@ -50,7 +50,7 @@ namespace Bearded.UI.Events
             tryFindPropagationPathForAnyChild(root, propagationTest, path);
             return path;
         }
-        
+
         private static bool tryFindPropagationPathForAnyChild(
             IControlParent parent, PropagationTest propagationTest, List<Control> path) =>
             parent.Children.Reverse()

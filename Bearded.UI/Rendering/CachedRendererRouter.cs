@@ -6,7 +6,7 @@ namespace Bearded.UI.Rendering
     public class CachedRendererRouter : RendererRouter
     {
         private readonly Dictionary<Type, object> rendererCache = new Dictionary<Type, object>();
-        
+
         public CachedRendererRouter(IEnumerable<(Type type, object renderer)> renderers) : base(renderers) { }
 
         protected override IRenderer<T> GetRenderer<T>()

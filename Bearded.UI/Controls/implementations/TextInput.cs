@@ -105,7 +105,7 @@ namespace Bearded.UI.Controls
             InsertTextAtCursor(eventArgs.Character.ToString());
             eventArgs.Handled = true;
         }
-        
+
         public void MoveCursorToEnd()
         {
             cursorPosition = text.Length;
