@@ -1,6 +1,6 @@
 namespace Bearded.UI
 {
-    public struct Anchors
+    public readonly struct Anchors
     {
         public Anchor Start { get; }
         public Anchor End { get; }

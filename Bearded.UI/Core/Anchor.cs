@@ -1,6 +1,6 @@
 ﻿namespace Bearded.UI
 {
-    public struct Anchor
+    public readonly struct Anchor
     {
         public double Percentage { get; }
         public double Offset { get; }

@@ -1,6 +1,6 @@
 ﻿namespace Bearded.UI
 {
-    public struct VerticalAnchors
+    public readonly struct VerticalAnchors
     {
         private readonly Anchors anchors;
 
