@@ -52,7 +52,7 @@ namespace Bearded.UI.Navigation
             return (accumulators.models.ToDictionary, accumulators.views.ToDictionary);
         }
 
-        public class ModelFactoryAccumulator
+        public sealed class ModelFactoryAccumulator
         {
             private readonly Dictionary<Type, object> dict = new Dictionary<Type, object>();
 
@@ -68,7 +68,7 @@ namespace Bearded.UI.Navigation
             public IDictionary<Type, object> ToDictionary => new ReadOnlyDictionary<Type, object>(dict);
         }
 
-        public class ViewFactoryAccumulator
+        public sealed class ViewFactoryAccumulator
         {
             private readonly Dictionary<Type, object> dict = new Dictionary<Type, object>();
 

@@ -1,6 +1,6 @@
 ﻿namespace Bearded.UI.EventArgs
 {
-    public class CharEventArgs : RoutedEventArgs
+    public sealed class CharEventArgs : RoutedEventArgs
     {
         public char Character { get; }
 

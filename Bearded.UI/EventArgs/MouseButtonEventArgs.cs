@@ -3,7 +3,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 
 namespace Bearded.UI.EventArgs
 {
-    public class MouseButtonEventArgs : MouseEventArgs
+    public sealed class MouseButtonEventArgs : MouseEventArgs
     {
         public MouseButton MouseButton { get; }
 

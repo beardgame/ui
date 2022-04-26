@@ -1,6 +1,6 @@
 ﻿namespace Bearded.UI.Controls
 {
-    public class FocusManager
+    public sealed class FocusManager
     {
         private Control? currentFocus;
 
@@ -27,7 +27,7 @@
 
             if (currentFocus.IsFocused)
                 currentFocus.Unfocus();
-            
+
             currentFocus = null;
         }
     }

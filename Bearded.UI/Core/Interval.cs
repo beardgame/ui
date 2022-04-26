@@ -1,6 +1,6 @@
 ﻿namespace Bearded.UI
 {
-    public struct Interval
+    public readonly struct Interval
     {
         public double Start { get; }
         public double Size { get; }

@@ -2,7 +2,7 @@
 
 namespace Bearded.UI
 {
-    public struct Frame
+    public readonly struct Frame
     {
         public Interval X { get; }
         public Interval Y { get; }
