@@ -22,7 +22,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Bearded.Utilities" Version="0.3.0-dev.4" />
-    <PackageReference Include="OpenTK.Core" Version="4.7.5" />
+    <PackageReference Include="OpenTK.Core" Version="4.7.6" />
     <PackageReference Include="OpenTK.Mathematics" Version="4.7.5" />
     <PackageReference Include="OpenTK.Windowing.Common" Version="4.7.5" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
