@@ -2,7 +2,9 @@
   <PropertyGroup>
     <RootNamespace>Bearded.UI</RootNamespace>
     <Title>Bearded.UI</Title>
+    <AssemblyTitle>Bearded UI</AssemblyTitle>
     <Authors>amulware;tomrijnbeek</Authors>
+    <Description>A UI framework with positioning, anchoring, event handling, navigation, and more.</Description>
     <PackageProjectUrl>https://github.com/beardgame/ui</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/beardgame/ui</RepositoryUrl>
