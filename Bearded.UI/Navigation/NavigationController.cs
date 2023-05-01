@@ -52,35 +52,36 @@ namespace Bearded.UI.Navigation
             viewsByModel.Remove(toClose);
         }
 
-        public void ReplaceAll<TModel>()
+        public TModel ReplaceAll<TModel>()
             where TModel : NavigationNode<Void>
         {
-            ReplaceAll<TModel, Void>(default);
+            return ReplaceAll<TModel, Void>(default);
         }
 
-        public void ReplaceAll<TModel, TParameters>(TParameters parameters)
+        public TModel ReplaceAll<TModel, TParameters>(TParameters parameters)
             where TModel : NavigationNode<TParameters>
         {
             CloseAll();
-            Push<TModel, TParameters>(parameters);
+            return Push<TModel, TParameters>(parameters);
         }
 
-        public void Replace<TModel>(INavigationNode toReplace)
+        public TModel Replace<TModel>(INavigationNode toReplace)
             where TModel : NavigationNode<Void>
         {
-            Replace<TModel, Void>(default, toReplace);
+            return Replace<TModel, Void>(default, toReplace);
         }
 
-        public void Replace<TModel, TParameters>(TParameters parameters, INavigationNode toReplace)
+        public TModel Replace<TModel, TParameters>(TParameters parameters, INavigationNode toReplace)
             where TModel : NavigationNode<TParameters>
         {
             var viewToReplace = viewsByModel[toReplace];
             toReplace.Terminate();
-            var (_, view) = instantiateModelAndView<TModel, TParameters>(parameters);
+            var (model, view) = instantiateModelAndView<TModel, TParameters>(parameters);
             new AnchorTemplate(viewToReplace).ApplyTo(view);
             root.AddOnTopOf(viewToReplace, view);
             root.Remove(viewToReplace);
             viewsByModel.Remove(toReplace);
+            return model;
         }
 
         public TModel Push<TModel>()
