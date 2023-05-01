@@ -36,59 +36,64 @@ namespace Bearded.UI.Navigation
 
         public void CloseAll()
         {
-            while (root.Children.Count > 0)
-                root.Remove(root.Children[0]);
+            foreach (var (node, view) in viewsByModel)
+            {
+                node.Terminate();
+                root.Remove(view);
+            }
             viewsByModel.Clear();
         }
 
         public void Close(INavigationNode toClose)
         {
-            var viewToReplace = viewsByModel[toClose];
-            root.Remove(viewToReplace);
+            var viewToRemove = viewsByModel[toClose];
+            toClose.Terminate();
+            root.Remove(viewToRemove);
             viewsByModel.Remove(toClose);
         }
 
-        public void ReplaceAll<TModel>()
+        public TModel ReplaceAll<TModel>()
             where TModel : NavigationNode<Void>
         {
-            ReplaceAll<TModel, Void>(default(Void));
+            return ReplaceAll<TModel, Void>(default);
         }
 
-        public void ReplaceAll<TModel, TParameters>(TParameters parameters)
+        public TModel ReplaceAll<TModel, TParameters>(TParameters parameters)
             where TModel : NavigationNode<TParameters>
         {
             CloseAll();
-            Push<TModel, TParameters>(parameters);
+            return Push<TModel, TParameters>(parameters);
         }
 
-        public void Replace<TModel>(INavigationNode toReplace)
+        public TModel Replace<TModel>(INavigationNode toReplace)
             where TModel : NavigationNode<Void>
         {
-            Replace<TModel, Void>(default(Void), toReplace);
+            return Replace<TModel, Void>(default, toReplace);
         }
 
-        public void Replace<TModel, TParameters>(TParameters parameters, INavigationNode toReplace)
+        public TModel Replace<TModel, TParameters>(TParameters parameters, INavigationNode toReplace)
             where TModel : NavigationNode<TParameters>
         {
-            toReplace.Terminate();
             var viewToReplace = viewsByModel[toReplace];
-            var (_, view) = instantiateModelAndView<TModel, TParameters>(parameters);
+            toReplace.Terminate();
+            var (model, view) = instantiateModelAndView<TModel, TParameters>(parameters);
             new AnchorTemplate(viewToReplace).ApplyTo(view);
             root.AddOnTopOf(viewToReplace, view);
             root.Remove(viewToReplace);
             viewsByModel.Remove(toReplace);
+            return model;
         }
 
         public TModel Push<TModel>()
             where TModel : NavigationNode<Void>
         {
-            return Push<TModel, Void>(default(Void));
+            return Push<TModel, Void>(default);
         }
 
         public TModel Push<TModel>(Func<AnchorTemplate, AnchorTemplate> build)
             where TModel : NavigationNode<Void>
         {
-            return Push<TModel, Void>(default(Void), build);
+            return Push<TModel, Void>(default, build);
         }
 
         public TModel Push<TModel, TParameters>(TParameters parameters)
@@ -117,13 +122,11 @@ namespace Bearded.UI.Navigation
             return (model, view);
         }
 
-        private Func<T> findModelFactory<T>()
-            => (Func<T>) modelFactories[typeof(T)];
+        private Func<T> findModelFactory<T>() => (Func<T>) modelFactories[typeof(T)];
 
-        private Func<T, Control> findViewFactory<T>()
-            => (Func<T, Control>) viewFactories[typeof(T)];
+        private Func<T, Control> findViewFactory<T>() => (Func<T, Control>) viewFactories[typeof(T)];
 
-        private NavigationContext<T> createNavigationContext<T>(T parameters)
-            => new NavigationContext<T>(this, dependencyResolver, parameters);
+        private NavigationContext<T> createNavigationContext<T>(T parameters) =>
+            new(this, dependencyResolver, parameters);
     }
 }
