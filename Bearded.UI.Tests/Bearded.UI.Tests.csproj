@@ -29,6 +29,5 @@
     <!-- Needed to make indexes work -->
     <PackageReference Include="IndexRange" Version="1.0.2" />
     <!-- Needed to make C#9 features work -->
-    <Compile Include="IsExternalInit.cs" />
   </ItemGroup>
 </Project>

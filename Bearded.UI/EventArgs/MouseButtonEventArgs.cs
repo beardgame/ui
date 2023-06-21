@@ -7,8 +7,9 @@ namespace Bearded.UI.EventArgs
     {
         public MouseButton MouseButton { get; }
 
-        public MouseButtonEventArgs(Vector2d mousePosition, ModifierKeys modifierKeys, MouseButton mouseButton)
-            : base(mousePosition, modifierKeys)
+        public MouseButtonEventArgs(
+            Vector2d mousePosition, MouseButtons mouseButtons, ModifierKeys modifierKeys, MouseButton mouseButton)
+            : base(mousePosition, mouseButtons, modifierKeys)
         {
             MouseButton = mouseButton;
         }
