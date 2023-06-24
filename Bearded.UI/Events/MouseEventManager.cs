@@ -1,4 +1,5 @@
-﻿using Bearded.UI.Controls;
+﻿using System.Collections.Immutable;
+using Bearded.UI.Controls;
 using Bearded.UI.EventArgs;
 using Bearded.Utilities.Input;
 using OpenTK.Mathematics;
@@ -10,10 +11,8 @@ namespace Bearded.UI.Events
 {
     sealed class MouseEventManager
     {
-        private static readonly MouseButton[] mouseButtons =
-        {
-            MouseButton.Left, MouseButton.Middle, MouseButton.Right
-        };
+        private static readonly ImmutableArray<MouseButton> mouseButtonsWithEvents =
+            ImmutableArray.Create(MouseButton.Left, MouseButton.Middle, MouseButton.Right);
 
         private readonly RootControl root;
         private readonly InputManager inputManager;
@@ -28,7 +27,8 @@ namespace Bearded.UI.Events
 
         internal void Update()
         {
-            var mousePosition = root.TransformViewportPosToFramePos((Vector2d) inputManager.MousePosition);
+            var mousePosition = root.TransformViewportPosToFramePos(inputManager.MousePosition);
+            var mouseButtons = MouseButtons.FromInputManager(inputManager);
             var modifierKeys = ModifierKeys.FromInputManager(inputManager);
 
             var path = EventRouter.FindPropagationPath(
@@ -47,7 +47,7 @@ namespace Bearded.UI.Events
             var (removedFromPath, addedToPath) = previousPropagationPath != null
                 ? EventPropagationPath.CalculateDeviation(previousPropagationPath, path)
                 : (EventPropagationPath.Empty, path);
-            var eventArgs = new MouseEventArgs(mousePosition, modifierKeys);
+            var eventArgs = new MouseEventArgs(mousePosition, mouseButtons, modifierKeys);
 
             // Mouse exit
             removedFromPath.PropagateEvent(
@@ -68,20 +68,20 @@ namespace Bearded.UI.Events
                 (c, e) => c.MouseMoved(e));
 
             // Mouse clicks
-            foreach (var btn in mouseButtons)
+            foreach (var btn in mouseButtonsWithEvents)
             {
                 var action = inputManager.Actions.Mouse.FromButton(btn);
                 if (action.Hit)
                 {
                     path.PropagateEvent(
-                        new MouseButtonEventArgs(mousePosition, modifierKeys, btn),
+                        new MouseButtonEventArgs(mousePosition, mouseButtons, modifierKeys, btn),
                         (c, e) => c.PreviewMouseButtonHit(e),
                         (c, e) => c.MouseButtonHit(e));
                 }
                 if (action.Released)
                 {
                     path.PropagateEvent(
-                        new MouseButtonEventArgs(mousePosition, modifierKeys, btn),
+                        new MouseButtonEventArgs(mousePosition, mouseButtons, modifierKeys, btn),
                         (c, e) => c.PreviewMouseButtonReleased(e),
                         (c, e) => c.MouseButtonReleased(e));
                 }
@@ -93,7 +93,7 @@ namespace Bearded.UI.Events
             {
                 path.PropagateEvent(
                     new MouseScrollEventArgs(
-                        mousePosition, modifierKeys, inputManager.DeltaScroll, inputManager.DeltaScrollF),
+                        mousePosition, mouseButtons, modifierKeys, inputManager.DeltaScroll, inputManager.DeltaScrollF),
                     (c, e) => c.PreviewMouseScrolled(e),
                     (c, e) => c.MouseScrolled(e));
             }
