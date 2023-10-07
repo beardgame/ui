@@ -9,8 +9,15 @@ updates:
       interval: "daily"
     commit-message:
       prefix: "⬆"
-    assignees:
+    reviewers:
       - "tomrijnbeek"
+    groups:
+      opentk:
+        patterns:
+          - "OpenTK*"
+      xunit:
+        patterns:
+          - "xunit*"
 
   - package-ecosystem: "github-actions"
     # Workflow files stored in the
@@ -20,5 +27,5 @@ updates:
       interval: "daily"
     commit-message:
       prefix: "⬆"
-    assignees:
+    reviewers:
       - "tomrijnbeek"
