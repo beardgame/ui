@@ -17,6 +17,12 @@ namespace Bearded.UI.Controls
             CanBeFocused = true;
         }
 
+        public override void MouseButtonHit(MouseButtonEventArgs eventArgs)
+        {
+            base.MouseButtonHit(eventArgs);
+            eventArgs.Handled = true;
+        }
+
         public override void MouseButtonReleased(MouseButtonEventArgs eventArgs)
         {
             base.MouseButtonReleased(eventArgs);
