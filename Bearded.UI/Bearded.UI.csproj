@@ -27,7 +27,7 @@
     <PackageReference Include="OpenTK.Core" Version="4.8.2" />
     <PackageReference Include="OpenTK.Mathematics" Version="4.8.2" />
     <PackageReference Include="OpenTK.Windowing.Common" Version="4.8.2" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 </Project>
